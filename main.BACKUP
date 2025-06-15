@@ -1,0 +1,74 @@
+suit = require 'suit'
+
+local show_message = false
+
+function love.load()
+  -- cash total, multiplyer, and prefix.
+  cash = {}
+  cash.Total = 0
+  cash.Multiplyer = 1
+  cash.Prefix = "$"
+  
+  -- displays cash amount
+  cashDisplay = {}
+  
+  -- Item system
+   items = {
+    "Yell at",
+    "Punch",
+    "Roundhouse Kick",
+    "Shock Collar",
+    "Ikea Bag + Wall",
+    "Injection",
+    "Improvised Explosives",
+    "Concrete Shoes + River",
+    "Nana + Pop Pop's House",
+  }
+  items = items[1]
+  
+
+  item = {}
+  item.LabelCur = {"Equipped: ", items}
+  
+
+  
+
+end
+
+function love.update(dt)
+
+    -- Equipped item logic
+    suit.Label(item.LabelCur, 100,40, 150,30) 
+  
+    -- Button to open the shop
+    if suit.Button("Shop", 100,200, 100,30).hit then
+      showShop = true
+    end
+  
+    if suit.Button("Shop", 100,200, 100,30).hit and showShop == true then
+      showShow = false
+    end
+
+    
+    if showShop == true then
+        suit.Button("Test", 300,100, 150,30)
+    end
+
+    
+    
+
+    
+
+    -- Put a button on the screen. If hit, show a message.
+    if suit.Button("Hurt", 100,100, 100,30).hit then
+        cash.Total = cash.Total + cash.Multiplyer
+        cashDisplay = {cash.Prefix, cash.Total}
+    end
+
+    -- show cash
+    suit.Label(cashDisplay, 100,150, 100,30)
+end
+
+function love.draw()
+    suit.draw()
+end
