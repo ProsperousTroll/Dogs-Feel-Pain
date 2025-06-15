@@ -1,5 +1,5 @@
 
-local wf = require 'windfield/windfield'
+local wf = require 'libraries/windfield/windfield'
 local grabbedCollider = nil
 local mouseJoint = nil
 
