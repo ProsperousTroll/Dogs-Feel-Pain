@@ -13,22 +13,42 @@ function love.load()
     world:addCollisionClass('Interactive')
 
 
-    -- Temporary box collision body 
+    -- Temporary bludgening tool 
     
     testBox = world:newRectangleCollider(600 - 50/2, 0, 200, 50)
-    
-    box1 = world:newBSGRectangleCollider(400 - 50/2, 0, 50, 50, 10)
-    box1:setRestitution(0.6)
-    box2 = world:newBSGRectangleCollider(340 - 50/2, 0, 50, 50, 10)
-    box2:setRestitution(0.6)
-    box3 = world:newBSGRectangleCollider(290 - 50/2, -40, 75, 50, 10)
-    box3:setRestitution(0.6)
-    joint = world:addJoint('RevoluteJoint', box1, box2, 375, 25, true)
-    joint2 = world:addJoint('RevoluteJoint', box3, box2, 325, 0, true)
-    box1:setCollisionClass('Interactive')
-    box2:setCollisionClass('Interactive')
-    box3:setCollisionClass('Interactive')
     testBox:setCollisionClass('Interactive')
+    
+    -- delete this 
+    
+    local tempOffset = 150
+
+    -- The Dog Who Feels Pain -- 
+
+    -- colliders 
+    DOG = {}
+    DOG.frLeg = world:newBSGRectangleCollider(350 - 50/2, 30, 10, 60, 5)
+    DOG.bkLeg = world:newBSGRectangleCollider(435 - 50/2, 30, 10, 60, 5)
+    DOG.butt = world:newBSGRectangleCollider(400 - 50/2, 0, 45, 50, 10)
+    DOG.chest = world:newBSGRectangleCollider(340 - 50/2, 0, 54, 50, 10)
+    DOG.head = world:newBSGRectangleCollider(290 - 50/2, -40, 70, 50, 10)
+    
+    -- joints
+    DOG.joint1= world:addJoint('RevoluteJoint', DOG.butt, DOG.chest, 375, 25, true)
+    DOG.joint2= world:addJoint('RevoluteJoint', DOG.chest, DOG.head, 325, 0, true)
+    DOG.joint3= world:addJoint('RevoluteJoint', DOG.frLeg, DOG.chest, 355 - 50/2, 30, false)
+    DOG.joint4= world:addJoint('RevoluteJoint', DOG.bkLeg, DOG.butt, 440 - 50/2, 30, false)
+    
+    -- setting restitution to entire dog to 0.6 (global bouncy value)
+
+    DOG.frLeg:setRestitution(0.6)
+    DOG.bkLeg:setRestitution(0.6)
+    DOG.head:setRestitution(0.6)
+    DOG.chest:setRestitution(0.6)
+    DOG.butt:setRestitution(0.6)
+    
+    -- setting entire dog to class 'interactive' (making all parts clickable)
+    DOG.head:setCollisionClass('Interactive')            
+    
     
     -- The walls/floor of the world
     ground = world:newRectangleCollider(0, 550, 800, 50)
@@ -43,13 +63,14 @@ end
 
 function love.mousepressed(x, y, button)
     if button == 1 and not grabbedCollider then
-        -- find collider under mouse
+        -- find interactable collider under mouse
         local colliders = world:queryCircleArea(x, y, 25, {'Interactive'})
 
         if #colliders > 0 then
             grabbedCollider = colliders[1]
             local body = grabbedCollider.body
             mouseJoint = love.physics.newMouseJoint(body, x, y)
+            -- having these settings made it feel worse TBH
             -- mouseJoint:setDampingRatio(0.8)
             -- mouseJoint:setFrequency(4.00)
             -- mouseJoint:setMaxForce(16000 * body:getMass())
