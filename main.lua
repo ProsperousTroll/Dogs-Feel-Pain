@@ -6,7 +6,7 @@ local mouseJoint = nil
 function love.load()
     -- Creating the main game world
     world = wf.newWorld(0, 0, true)
-    world:setGravity(0, 1024)
+    world:setGravity(0, 1028)
     
     -- ART ASSETS 
     dogART = {}
@@ -23,9 +23,11 @@ function love.load()
 
 
     -- Temporary bludgening tool 
-    
-    testBox = world:newRectangleCollider(600 - 50/2, 0, 200, 50)
-    testBox:setCollisionClass('Interactive')
+    BAT = {}
+    BAT.shaft = world:newRectangleCollider(450 - 50/2, 0, 150, 25)
+    BAT.handle = world:newRectangleCollider(600 - 50/2, 0, 50, 25)
+    BAT.weld = world:addJoint('WeldJoint', BAT.handle, BAT.shaft, 600 - 50/2, 10, false)
+    BAT.handle:setCollisionClass('Interactive')
 
     -- The Dog Who Feels Pain -- 
 
@@ -44,6 +46,8 @@ function love.load()
     DOG.joint3 = world:addJoint('RevoluteJoint', DOG.frLeg, DOG.chest, 355 - 50/2, 30, true)
     DOG.joint4 = world:addJoint('RevoluteJoint', DOG.bkLeg, DOG.butt, 440 - 50/2, 30, true)
     DOG.joint5 = world:addJoint('RevoluteJoint', DOG.tail, DOG.butt, 440 - 50/2, 0, true)
+    
+    DOG.joint5 =
     
     -- setting restitution to entire dog to 0.6 (global bouncy value)
     DOG.frLeg:setRestitution(0.6)
@@ -124,7 +128,7 @@ function love.draw()
 
     -- Draw dog sprites over colliders 
     love.graphics.draw(dogART.butt, dogPOS.buttX, dogPOS.buttY, dogPOS.buttAngle, 1, 1, dogART.butt:getWidth()/2-10, dogART.butt:getHeight()/2)
-    love.graphics.draw(dogART.tail, dogPOS.tailX-10, dogPOS.tailY, dogPOS.tailAngle, 0.7, 0.7, dogART.tail:getWidth()/2, dogART.tail:getHeight()/2)
+    -- love.graphics.draw(dogART.tail, dogPOS.tailX, dogPOS.tailY, dogPOS.tailAngle, 1, 1, dogART.tail:getWidth()/2, dogART.tail:getHeight()/2)
     love.graphics.draw(dogART.chest, dogPOS.chestX, dogPOS.chestY, dogPOS.chestAngle, 1, 1, dogART.chest:getWidth()/2+20, dogART.chest:getHeight()/2+7)
     love.graphics.draw(dogART.head, dogPOS.headX, dogPOS.headY, dogPOS.headAngle, 1, 1, dogART.head:getWidth()/2, dogART.head:getHeight()/2)
 
