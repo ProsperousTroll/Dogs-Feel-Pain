@@ -8,6 +8,13 @@ function love.load()
     world = wf.newWorld(0, 0, true)
     world:setGravity(0, 1024)
     
+    -- ART ASSETS 
+    dogART = {}
+    dogART.head = love.graphics.newImage("assets/ugly dog head.png")
+    dogART.chest = love.graphics.newImage("assets/ugly dog chest.png")
+    dogART.butt = love.graphics.newImage("assets/ugly dog butt.png")
+    dogART.tail = love.graphics.newImage("assets/ugly dog tail.png")
+    
     -- establish collision classes
      
     world:addCollisionClass('Interactive')
@@ -24,8 +31,8 @@ function love.load()
 
     -- colliders 
     DOG = {}
-    DOG.frLeg = world:newBSGRectangleCollider(350 - 50/2, 30, 10, 60, 5)
-    DOG.bkLeg = world:newBSGRectangleCollider(435 - 50/2, 30, 10, 60, 5)
+    DOG.frLeg = world:newBSGRectangleCollider(350 - 50/2, 50, 10, 40, 5)
+    DOG.bkLeg = world:newBSGRectangleCollider(435 - 50/2, 50, 10, 40, 5)
     DOG.tail = world:newBSGRectangleCollider(435 - 50/2, -40, 10, 50, 5)
     DOG.butt = world:newBSGRectangleCollider(400 - 50/2, 0, 45, 50, 10)
     DOG.chest = world:newBSGRectangleCollider(340 - 50/2, 0, 54, 50, 10)
@@ -34,8 +41,8 @@ function love.load()
     -- joints
     DOG.joint1 = world:addJoint('RevoluteJoint', DOG.butt, DOG.chest, 375, 25, true)
     DOG.joint2 = world:addJoint('RevoluteJoint', DOG.chest, DOG.head, 325, 0, true)
-    DOG.joint3 = world:addJoint('RevoluteJoint', DOG.frLeg, DOG.chest, 355 - 50/2, 30, false)
-    DOG.joint4 = world:addJoint('RevoluteJoint', DOG.bkLeg, DOG.butt, 440 - 50/2, 30, false)
+    DOG.joint3 = world:addJoint('RevoluteJoint', DOG.frLeg, DOG.chest, 355 - 50/2, 30, true)
+    DOG.joint4 = world:addJoint('RevoluteJoint', DOG.bkLeg, DOG.butt, 440 - 50/2, 30, true)
     DOG.joint5 = world:addJoint('RevoluteJoint', DOG.tail, DOG.butt, 440 - 50/2, 0, true)
     
     -- setting restitution to entire dog to 0.6 (global bouncy value)
@@ -101,5 +108,32 @@ function love.update(dt)
 end
 
 function love.draw()
-    world:draw()
+    -- Declaring position variables to match sprite position to collision position
+    dogPOS = {}
+    dogPOS.headX, dogPOS.headY = DOG.head:getPosition()
+    dogPOS.headAngle = DOG.head:getAngle()
+    
+    dogPOS.chestX, dogPOS.chestY = DOG.chest:getPosition()
+    dogPOS.chestAngle = DOG.chest:getAngle()
+    
+    dogPOS.buttX, dogPOS.buttY = DOG.butt:getPosition()
+    dogPOS.buttAngle = DOG.butt:getAngle()
+    
+    dogPOS.tailX, dogPOS.tailY = DOG.tail:getPosition()
+    dogPOS.tailAngle = DOG.tail:getAngle()
+
+    -- Draw dog sprites over colliders 
+    love.graphics.draw(dogART.butt, dogPOS.buttX, dogPOS.buttY, dogPOS.buttAngle, 1, 1, dogART.butt:getWidth()/2-10, dogART.butt:getHeight()/2)
+    love.graphics.draw(dogART.tail, dogPOS.tailX-10, dogPOS.tailY, dogPOS.tailAngle, 0.7, 0.7, dogART.tail:getWidth()/2, dogART.tail:getHeight()/2)
+    love.graphics.draw(dogART.chest, dogPOS.chestX, dogPOS.chestY, dogPOS.chestAngle, 1, 1, dogART.chest:getWidth()/2+20, dogART.chest:getHeight()/2+7)
+    love.graphics.draw(dogART.head, dogPOS.headX, dogPOS.headY, dogPOS.headAngle, 1, 1, dogART.head:getWidth()/2, dogART.head:getHeight()/2)
+
+    -- Debug, draw collision boxes
+    if not love.keyboard.isDown("d") then
+        world:draw()
+    end
+    
+    -- background 
+    local r, g, b = love.math.colorFromBytes(22, 28, 75)
+    love.graphics.setBackgroundColor(r,g,b)
 end
