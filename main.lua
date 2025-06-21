@@ -14,6 +14,8 @@ function love.load()
     dogART.chest = love.graphics.newImage("assets/ugly dog chest.png")
     dogART.butt = love.graphics.newImage("assets/ugly dog butt.png")
     dogART.tail = love.graphics.newImage("assets/ugly dog tail.png")
+    dogART.frleg = love.graphics.newImage("assets/ugly dog fleg.png")
+    dogART.bkleg = love.graphics.newImage("assets/ugly dog bkleg.png")
     
     miscART = {}
     miscART.bat = love.graphics.newImage("assets/bat.png")
@@ -26,7 +28,7 @@ function love.load()
 
     -- Temp bludgeoning tool
     BAT = {}
-    BAT.col = world:newRectangleCollider(600 - 50/2, 0, 250, 40)
+    BAT.col = world:newRectangleCollider(400 - 50/2, 0, 250, 40)
     BAT.col:setCollisionClass('Interactive')
 
     -- This felt like shit to swing around, going with a simpler approach  
@@ -92,7 +94,7 @@ end
 function love.mousepressed(x, y, button)
     if button == 1 and not grabbedCollider then
         -- find interactable collider under mouse
-        local colliders = world:queryCircleArea(x, y, 25, {'Interactive'})
+        local colliders = world:queryCircleArea(x, y, 20, {'Interactive'})
 
         if #colliders > 0 then
             grabbedCollider = colliders[1]
@@ -135,6 +137,12 @@ function love.draw()
     dogPOS.tailX, dogPOS.tailY = DOG.tail:getPosition()
     dogPOS.tailAngle = DOG.tail:getAngle()
     
+    dogPOS.frlegX, dogPOS.frlegY = DOG.frLeg:getPosition()
+    dogPOS.frlegAngle = DOG.frLeg:getAngle()
+    
+    dogPOS.bklegX, dogPOS.bklegY = DOG.bkLeg:getPosition()
+    dogPOS.bklegAngle = DOG.bkLeg:getAngle()
+    
     objPOS = {}
     objPOS.batX, objPOS.batY = BAT.col:getPosition()
     objPOS.batAngle = BAT.col:getAngle()
@@ -144,6 +152,8 @@ function love.draw()
     love.graphics.draw(dogART.tail, dogPOS.tailX, dogPOS.tailY, dogPOS.tailAngle, 1, 0.65, dogART.tail:getWidth()/2, dogART.tail:getHeight()/2-15)
     love.graphics.draw(dogART.chest, dogPOS.chestX, dogPOS.chestY, dogPOS.chestAngle, 1, 1, dogART.chest:getWidth()/2+20, dogART.chest:getHeight()/2+7)
     love.graphics.draw(dogART.head, dogPOS.headX, dogPOS.headY, dogPOS.headAngle, 1, 1, dogART.head:getWidth()/2, dogART.head:getHeight()/2)
+    love.graphics.draw(dogART.frleg, dogPOS.frlegX, dogPOS.frlegY, dogPOS.frlegAngle, 1, 1, dogART.frleg:getWidth()/2, dogART.frleg:getHeight()/2+15)
+    love.graphics.draw(dogART.bkleg, dogPOS.bklegX, dogPOS.bklegY, dogPOS.bklegAngle, 1, 1, dogART.bkleg:getWidth()/2, dogART.bkleg:getHeight()/2+15)
 
     -- Draw object sprites over colliders
     love.graphics.draw(miscART.bat, objPOS.batX, objPOS.batY, objPOS.batAngle, 1, 1, miscART.bat:getWidth()/2, miscART.bat:getHeight()/2)
