@@ -15,19 +15,26 @@ function love.load()
     dogART.butt = love.graphics.newImage("assets/ugly dog butt.png")
     dogART.tail = love.graphics.newImage("assets/ugly dog tail.png")
     
+    miscART = {}
+    miscART.bat = love.graphics.newImage("assets/bat.png")
+    
     -- establish collision classes
      
     world:addCollisionClass('Interactive')
     world:addCollisionClass('dogBody')
     world:addCollisionClass('dogLimb', {ignores = {'dogBody'}})
 
-
-    -- Temporary bludgening tool 
+    -- Temp bludgeoning tool
     BAT = {}
-    BAT.shaft = world:newRectangleCollider(450 - 50/2, 0, 150, 25)
-    BAT.handle = world:newRectangleCollider(600 - 50/2, 0, 50, 25)
-    BAT.weld = world:addJoint('WeldJoint', BAT.handle, BAT.shaft, 600 - 50/2, 10, false)
-    BAT.handle:setCollisionClass('Interactive')
+    BAT.col = world:newRectangleCollider(600 - 50/2, 0, 250, 40)
+    BAT.col:setCollisionClass('Interactive')
+
+    -- This felt like shit to swing around, going with a simpler approach  
+    -- BAT = {}
+    -- BAT.shaft = world:newRectangleCollider(450 - 50/2, 0, 150, 25)
+    -- BAT.handle = world:newRectangleCollider(600 - 50/2, 0, 50, 25)
+    -- BAT.weld = world:addJoint('WeldJoint', BAT.handle, BAT.shaft, 600 - 50/2, 10, true)
+    -- BAT.handle:setCollisionClass('Interactive')
 
     -- The Dog Who Feels Pain -- 
 
@@ -45,11 +52,13 @@ function love.load()
     DOG.joint2 = world:addJoint('RevoluteJoint', DOG.chest, DOG.head, 325, 0, true)
     DOG.joint3 = world:addJoint('RevoluteJoint', DOG.frLeg, DOG.chest, 355 - 50/2, 30, true)
     DOG.joint4 = world:addJoint('RevoluteJoint', DOG.bkLeg, DOG.butt, 440 - 50/2, 30, true)
-    DOG.joint5 = world:addJoint('RevoluteJoint', DOG.tail, DOG.butt, 440 - 50/2, 0, true)
+    DOG.joint5 = world:addJoint('RevoluteJoint', DOG.tail, DOG.butt, 440 - 50/2, 0, false)
     
-    DOG.joint5 =
+    -- Setting rotation limit of tail (looks more natural)
+    DOG.joint5:setLimitsEnabled(true)
+    DOG.joint5:setLimits(-1, 0)
     
-    -- setting restitution to entire dog to 0.6 (global bouncy value)
+    -- setting restitution to entire dog to 0.6 (global bouncy value, horrifically ugly code)
     DOG.frLeg:setRestitution(0.6)
     DOG.bkLeg:setRestitution(0.6)
     DOG.tail:setRestitution(0.6)
@@ -125,15 +134,22 @@ function love.draw()
     
     dogPOS.tailX, dogPOS.tailY = DOG.tail:getPosition()
     dogPOS.tailAngle = DOG.tail:getAngle()
+    
+    objPOS = {}
+    objPOS.batX, objPOS.batY = BAT.col:getPosition()
+    objPOS.batAngle = BAT.col:getAngle()
 
     -- Draw dog sprites over colliders 
     love.graphics.draw(dogART.butt, dogPOS.buttX, dogPOS.buttY, dogPOS.buttAngle, 1, 1, dogART.butt:getWidth()/2-10, dogART.butt:getHeight()/2)
-    -- love.graphics.draw(dogART.tail, dogPOS.tailX, dogPOS.tailY, dogPOS.tailAngle, 1, 1, dogART.tail:getWidth()/2, dogART.tail:getHeight()/2)
+    love.graphics.draw(dogART.tail, dogPOS.tailX, dogPOS.tailY, dogPOS.tailAngle, 1, 0.65, dogART.tail:getWidth()/2, dogART.tail:getHeight()/2-15)
     love.graphics.draw(dogART.chest, dogPOS.chestX, dogPOS.chestY, dogPOS.chestAngle, 1, 1, dogART.chest:getWidth()/2+20, dogART.chest:getHeight()/2+7)
     love.graphics.draw(dogART.head, dogPOS.headX, dogPOS.headY, dogPOS.headAngle, 1, 1, dogART.head:getWidth()/2, dogART.head:getHeight()/2)
 
-    -- Debug, draw collision boxes
-    if not love.keyboard.isDown("d") then
+    -- Draw object sprites over colliders
+    love.graphics.draw(miscART.bat, objPOS.batX, objPOS.batY, objPOS.batAngle, 1, 1, miscART.bat:getWidth()/2, miscART.bat:getHeight()/2)
+
+    -- Debug, draw collision boxes when 'd' key is held down 
+    if love.keyboard.isDown("d") then
         world:draw()
     end
     
