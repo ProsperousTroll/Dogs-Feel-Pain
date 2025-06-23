@@ -1,20 +1,25 @@
 -- Load libraries and other .lua files
 local wf = require 'libraries/windfield/windfield'
 local dog = require 'dog'
+local objects = require 'objects'
 
 -- For mouse grabbing logic
 local grabbedCollider = nil
 local mouseJoint = nil
+
+-- States
+local debugMode = false
+gameState = {
+    Main = false,
+    Menu = true,    
+    Pause = false,
+}
 
 function love.load()
 
     -- Creating the main game world
     world = wf.newWorld(0, 0, true)
     world:setGravity(0, 1028)
-
-    -- Misc art assets    
-    miscART = {}
-    miscART.bat = love.graphics.newImage("assets/bat.png")
     
     -- establish collision classes
     world:addCollisionClass('Interactive')
@@ -24,10 +29,8 @@ function love.load()
      -- Load dog
     dog.load()   
 
-    -- Temp bludgeoning tool
-    BAT = {}
-    BAT.col = world:newRectangleCollider(400 - 50/2, 0, 250, 40)
-    BAT.col:setCollisionClass('Interactive')
+    -- Load objects
+    objects.load()
 
     -- The walls/floor of the world
     
@@ -42,9 +45,44 @@ function love.load()
 
 end
 
--- Creates a mouse joint if an interactable object is detected
+-- Keyboard input handling
+function love.keypressed(key, isrepeat)
+
+    -- Toggle debug mode with "0"
+    if key == "0" and debugMode == false then
+        debugMode = true
+    elseif key == "0" and debugMode == true  then
+        debugMode = false
+    end
+    
+    
+    -- Pause game with "escape"
+    if key == "escape" and gameState.Main == true then
+        gameState.Main = false
+        gameState.Pause = true
+        -- Disable player from being able to interact with objects while paused
+        if mouseJoint then
+            mouseJoint:destroy()
+            mouseJoint = nil
+            grabbedCollider = nil
+        end
+    elseif key == "escape" and gameState.Pause == true then
+        gameState.Pause = false
+        gameState.Main = true
+    end
+    
+    -- Begin game with "enter"
+    if key == "return" and gameState.Menu then
+        gameState.Menu = false
+        gameState.Main = true
+    end
+
+end
+
 function love.mousepressed(x, y, button)
-    if button == 1 and not grabbedCollider then
+    
+-- Create mouse joint if mouse button 1 is clicked over interactive object
+    if button == 1 and not grabbedCollider and not gameState.Pause then
         -- find interactable collider under mouse
         local colliders = world:queryCircleArea(x, y, 20, {'Interactive'})
 
@@ -54,45 +92,61 @@ function love.mousepressed(x, y, button)
             mouseJoint = love.physics.newMouseJoint(body, x, y)
        end
     end
+
 end
 
--- Make mouse joint follow mouse while held
 function love.mousemoved(x, y, dx, dy)
+-- Make mouse joint follow mouse while held
     if mouseJoint then
         mouseJoint:setTarget(x,y)
     end
+
 end
 
--- Remove mouse joint when mouse 1 released
 function love.mousereleased(x, y, button)
+-- Remove mouse joint when mouse 1 released
     if button == 1 and mouseJoint then
         mouseJoint:destroy()
         mouseJoint = nil
         grabbedCollider = nil
     end
+
 end
 
+
 function love.update(dt)
-    dog.update(dt)
-    world:update(dt)
+    if gameState.Main then
+        world:update(dt)
+    end
 end
 
 function love.draw()
-    -- Draw dog sprites over collision boxes 
-    dog.draw()
-    
-    -- Get object position and angle
-    local objPOS = {}
-    objPOS.batX, objPOS.batY = BAT.col:getPosition()
-    objPOS.batAngle = BAT.col:getAngle()
-
+    -- Draw dog sprites over colliders 
+    if gameState.Main or gameState.Pause then
+       dog.draw()
+    end
 
     -- Draw object sprites over colliders
-    love.graphics.draw(miscART.bat, objPOS.batX, objPOS.batY, objPOS.batAngle, 1, 1, miscART.bat:getWidth()/2, miscART.bat:getHeight()/2)
+    if gameState.Main or gameState.Pause then
+        objects.draw()
+    end
 
-    -- Debug, draw collision boxes when 'd' key is held down 
-    if love.keyboard.isDown("d") then
+    -- Enable debug mode 
+    if debugMode then
         world:draw()
+    end
+    
+    -- Pause text 
+    if gameState.Pause then
+        love.graphics.print("Pawsed", 325, 275)
+    end
+    
+    -- Main menu logo (VERY TEMPORARY)
+    local logo = love.graphics.newImage("assets/templogo.png")
+    if gameState.Menu then
+        love.graphics.draw(logo, 200, 200)
+        love.graphics.print("Press Enter", 360, 350)
+        
     end
     
     -- background 
