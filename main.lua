@@ -42,7 +42,7 @@ function love.load()
 
     -- colliders 
     DOG = {}
-    DOG.frLeg = world:newBSGRectangleCollider(350 - 50/2, 50, 10, 40, 5)
+    DOG.frLeg = world:newBSGRectangleCollider(350 - 50/2, 55, 10, 35, 5)
     DOG.bkLeg = world:newBSGRectangleCollider(435 - 50/2, 50, 10, 40, 5)
     DOG.tail = world:newBSGRectangleCollider(445 - 50/2, -40, 10, 50, 5)
     DOG.butt = world:newBSGRectangleCollider(400 - 50/2, 0, 45, 50, 10)
