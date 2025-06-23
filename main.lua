@@ -82,7 +82,7 @@ end
 function love.mousepressed(x, y, button)
     
 -- Create mouse joint if mouse button 1 is clicked over interactive object
-    if button == 1 and not grabbedCollider and not gameState.Pause then
+    if button == 1 and not grabbedCollider and gameState.Main then
         -- find interactable collider under mouse
         local colliders = world:queryCircleArea(x, y, 20, {'Interactive'})
 
