@@ -8,20 +8,15 @@ local mouseJoint = nil
 
 function love.load()
 
-
     -- Creating the main game world
     world = wf.newWorld(0, 0, true)
     world:setGravity(0, 1028)
 
-
-
-    -- ART ASSETS 
-    
+    -- Misc art assets    
     miscART = {}
     miscART.bat = love.graphics.newImage("assets/bat.png")
     
     -- establish collision classes
-     
     world:addCollisionClass('Interactive')
     world:addCollisionClass('dogBody')
     world:addCollisionClass('dogLimb', {ignores = {'dogBody'}})
@@ -34,7 +29,6 @@ function love.load()
     BAT.col = world:newRectangleCollider(400 - 50/2, 0, 250, 40)
     BAT.col:setCollisionClass('Interactive')
 
-    
     -- The walls/floor of the world
     
     ground = world:newRectangleCollider(0, 550, 800, 50)
@@ -45,10 +39,10 @@ function love.load()
     ceiling:setType('static')
     wall_left:setType('static')
     wall_right:setType('static')
-    
 
 end
 
+-- Creates a mouse joint if an interactable object is detected
 function love.mousepressed(x, y, button)
     if button == 1 and not grabbedCollider then
         -- find interactable collider under mouse
@@ -62,12 +56,14 @@ function love.mousepressed(x, y, button)
     end
 end
 
+-- Make mouse joint follow mouse while held
 function love.mousemoved(x, y, dx, dy)
     if mouseJoint then
         mouseJoint:setTarget(x,y)
     end
 end
 
+-- Remove mouse joint when mouse 1 released
 function love.mousereleased(x, y, button)
     if button == 1 and mouseJoint then
         mouseJoint:destroy()
@@ -82,7 +78,7 @@ function love.update(dt)
 end
 
 function love.draw()
-    -- Draw
+    -- Draw dog sprites over collision boxes 
     dog.draw()
     
     -- Get object position and angle
