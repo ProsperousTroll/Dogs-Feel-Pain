@@ -54,7 +54,7 @@ function loadBeer()
 -- Beer bottle collider
     BOTTLE = {}    
 
-    BOTTLE.col = world:newRectangleCollider(350, 100, 36, 112)
+    BOTTLE.col = world:newRectangleCollider(winWidth/2-36/2, 100, 36, 112)
     BOTTLE.col:setRestitution(0.4)
     BOTTLE.col:setCollisionClass('Interactive')
 end
@@ -64,7 +64,7 @@ function loadAxeBat()
 
 -- Temp bludgeoning tool
     BAT = {}
-    BAT.col = world:newRectangleCollider(350, 100, 250, 40)
+    BAT.col = world:newRectangleCollider(winWidth/2-250/2, 100, 250, 40)
     BAT.col:setCollisionClass('Interactive')
     BAT.col:setRestitution(0.3)
 end

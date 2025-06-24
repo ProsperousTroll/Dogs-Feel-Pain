@@ -1,7 +1,7 @@
 local dog = {}
-local xOffset = 0
-local yOffset = 400
-dogVisible = true
+local xOffset = 180
+local yOffset = 600
+dogVisible = false
 
 function dog.load()
     
@@ -18,19 +18,19 @@ function dog.load()
     
      -- colliders 
     DOG = {}
-    DOG.frLeg = world:newBSGRectangleCollider(350 - 50/2, 55+yOffset, 10, 35, 5)
-    DOG.bkLeg = world:newBSGRectangleCollider(435 - 50/2, 50+yOffset, 10, 40, 5)
-    DOG.tail = world:newBSGRectangleCollider(445 - 50/2, -40+yOffset, 10, 50, 5)
-    DOG.butt = world:newBSGRectangleCollider(400 - 50/2, 0+yOffset, 45, 50, 10)
-    DOG.chest = world:newBSGRectangleCollider(340 - 50/2, 0+yOffset, 54, 50, 10)
-    DOG.head = world:newBSGRectangleCollider(290 - 50/2, -40+yOffset, 70, 50, 10)
+    DOG.frLeg = world:newBSGRectangleCollider(325+xOffset, 55+yOffset, 10, 35, 5)
+    DOG.bkLeg = world:newBSGRectangleCollider(410+xOffset, 50+yOffset, 10, 40, 5)
+    DOG.tail = world:newBSGRectangleCollider(420+xOffset, -40+yOffset, 10, 50, 5)
+    DOG.butt = world:newBSGRectangleCollider(375+xOffset, 0+yOffset, 45, 50, 10)
+    DOG.chest = world:newBSGRectangleCollider(315+xOffset, 0+yOffset, 54, 50, 10)
+    DOG.head = world:newBSGRectangleCollider(265+xOffset, -40+yOffset, 70, 50, 10)
     
     -- joints
-    DOG.joint1 = world:addJoint('RevoluteJoint', DOG.butt, DOG.chest, 375, 25+yOffset, true)
-    DOG.joint2 = world:addJoint('RevoluteJoint', DOG.chest, DOG.head, 325, 0+yOffset, true)
-    DOG.joint3 = world:addJoint('RevoluteJoint', DOG.frLeg, DOG.chest, 355 - 50/2, 30+yOffset, true)
-    DOG.joint4 = world:addJoint('RevoluteJoint', DOG.bkLeg, DOG.butt, 440 - 50/2, 30+yOffset, true)
-    DOG.joint5 = world:addJoint('RevoluteJoint', DOG.tail, DOG.butt, 450 - 50/2, 0+yOffset, false)
+    DOG.joint1 = world:addJoint('RevoluteJoint', DOG.butt, DOG.chest, 375+xOffset, 25+yOffset, true)
+    DOG.joint2 = world:addJoint('RevoluteJoint', DOG.chest, DOG.head, 325+xOffset, 0+yOffset, true)
+    DOG.joint3 = world:addJoint('RevoluteJoint', DOG.frLeg, DOG.chest, 330+xOffset, 30+yOffset, true)
+    DOG.joint4 = world:addJoint('RevoluteJoint', DOG.bkLeg, DOG.butt, 415+xOffset, 30+yOffset, true)
+    DOG.joint5 = world:addJoint('RevoluteJoint', DOG.tail, DOG.butt, 425+xOffset, 0+yOffset, false)
 
     -- Setting rotation limit of tail (looks more natural)
      
