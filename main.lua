@@ -1,7 +1,11 @@
 -- Load libraries and other .lua files
 local wf = require 'libraries/windfield/windfield'
+local Slab = require 'libraries/Slab'
 local dog = require 'dog'
 local objects = require 'objects'
+local ui = require 'ui'
+
+-- Placeholder vars for logo and bg images
 local logo
 local bg
 
@@ -27,6 +31,10 @@ end
 ----- LOVE.LOAD -----
 
 function love.load()
+
+    -- Load slab
+    ui.load()
+    
 
     -- Get window width + height
     winWidth, winHeight = love.graphics.getDimensions() 
@@ -113,22 +121,12 @@ function love.keypressed(key, isrepeat)
     -- Begin game with "enter"
     if key == "return" and gameState.Menu then
         initMain()
-    elseif key == "return" and not gameState.Menu then
-        initMenu()
     end
     
     
-    -- TEMP DEBUG... Spawn either bat or bottle 
+    -- TEMP DEBUG... "Q" to delete current object
     if key == "q" and gameState.Main and not grabbedCollider then
         objects.destroy()
-    end
-    
-    if key == "e" and gameState.Main and not itemState.beerBottle then
-        loadBeer()
-    end
-    
-    if key == "r" and gameState.Main and not itemState.axeBat then
-        loadAxeBat()
     end
 
 end
@@ -170,6 +168,10 @@ end
 
 
 function love.update(dt)
+    
+    -- Update slab (ui library)
+    ui.update(dt)
+
     if gameState.Main then
         world:update(dt)
     end
@@ -177,17 +179,17 @@ end
 
 function love.draw()
     -- Draw background
-    if gameState.Main then 
-        love.graphics.draw(bg, winWidth/2-bg:getWidth()/2, winHeight/2-bg:getHeight()/2)
-    end
+    love.graphics.draw(bg, winWidth/2-bg:getWidth()/2, winHeight/2-bg:getHeight()/2)
+
+
 
     -- Draw dog sprites over colliders 
-    if gameState.Main or gameState.Pause then
+    if gameState.Main or gameState.Shop then
         dog.draw()
     end
 
     -- Draw object sprites over colliders
-    if gameState.Main or gameState.Pause then
+    if gameState.Main or gameState.Shop then
         objects.draw()
     end
 
@@ -196,19 +198,20 @@ function love.draw()
        world:draw()
     end
     
-    -- Pause text 
-    if gameState.Pause then
-        love.graphics.print("Pawsed", 360, 275)
-    end
-    
     -- Main menu logo (VERY TEMPORARY)
     if gameState.Menu then
         love.graphics.draw(logo, winWidth/2-logo:getWidth()/2, winHeight/2-logo:getHeight()/2)
     end
     
+    -- Draw shop
+
     if gameState.Shop then
-        love.graphics.print("Shop", 360, 350, 0, 5)
+        love.graphics.print("Shop", winWidth/2-85, winHeight/2-200, 0, 5)
     end
+
+    -- Draw UI elements (Slab)
+    ui.draw()
+
 
     -- background 
     local r, g, b = love.math.colorFromBytes(22, 28, 75)
