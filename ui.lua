@@ -35,8 +35,7 @@ function ui.update(dt)
         })
         
         if Slab.Button("Begin.") then
-            initMain()
-        end
+            initMain() end
         
         if Slab.Button("I can't...") then
            love.window.close() 
