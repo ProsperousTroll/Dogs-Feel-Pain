@@ -1,9 +1,12 @@
 local dog = {}
 local xOffset = 0
 local yOffset = 400
+dogVisible = true
 
 function dog.load()
     
+    -- Make dog visible 
+    dogVisible = true
     -- ART ASSETS 
     dogART = {}
     dogART.head = love.graphics.newImage("assets/ugly dog head.png")
@@ -58,36 +61,48 @@ function dog.load()
 
 end
 
+function dog.destroy()
+
+    dogVisible = false
+    
+    for k, v in pairs(DOG) do
+        if type(v) == "table" and v.destroy then
+            v:destroy()
+        end
+    end
+
+end
 
 function dog.draw()
-
+    if dogVisible then
 -- Declaring position variables to match sprite position to collision position
-    local dogPOS = {}
-    dogPOS.headX, dogPOS.headY = DOG.head:getPosition()
-    dogPOS.headAngle = DOG.head:getAngle()
+        local dogPOS = {}
+        dogPOS.headX, dogPOS.headY = DOG.head:getPosition()
+        dogPOS.headAngle = DOG.head:getAngle()
     
-    dogPOS.chestX, dogPOS.chestY = DOG.chest:getPosition()
-    dogPOS.chestAngle = DOG.chest:getAngle()
+        dogPOS.chestX, dogPOS.chestY = DOG.chest:getPosition()
+        dogPOS.chestAngle = DOG.chest:getAngle()
     
-    dogPOS.buttX, dogPOS.buttY = DOG.butt:getPosition()
-    dogPOS.buttAngle = DOG.butt:getAngle()
+        dogPOS.buttX, dogPOS.buttY = DOG.butt:getPosition()
+        dogPOS.buttAngle = DOG.butt:getAngle()
     
-    dogPOS.tailX, dogPOS.tailY = DOG.tail:getPosition()
-    dogPOS.tailAngle = DOG.tail:getAngle()
+        dogPOS.tailX, dogPOS.tailY = DOG.tail:getPosition()
+        dogPOS.tailAngle = DOG.tail:getAngle()
     
-    dogPOS.frlegX, dogPOS.frlegY = DOG.frLeg:getPosition()
-    dogPOS.frlegAngle = DOG.frLeg:getAngle()
+        dogPOS.frlegX, dogPOS.frlegY = DOG.frLeg:getPosition()
+        dogPOS.frlegAngle = DOG.frLeg:getAngle()
     
-    dogPOS.bklegX, dogPOS.bklegY = DOG.bkLeg:getPosition()
-    dogPOS.bklegAngle = DOG.bkLeg:getAngle()
+        dogPOS.bklegX, dogPOS.bklegY = DOG.bkLeg:getPosition()
+        dogPOS.bklegAngle = DOG.bkLeg:getAngle()
 
     -- Draw dog sprites over colliders 
-    love.graphics.draw(dogART.butt, dogPOS.buttX, dogPOS.buttY, dogPOS.buttAngle, 1, 1, dogART.butt:getWidth()/2-10, dogART.butt:getHeight()/2)
-    love.graphics.draw(dogART.chest, dogPOS.chestX, dogPOS.chestY, dogPOS.chestAngle, 1, 1, dogART.chest:getWidth()/2+20, dogART.chest:getHeight()/2+7)
-    love.graphics.draw(dogART.head, dogPOS.headX, dogPOS.headY, dogPOS.headAngle, 1, 1, dogART.head:getWidth()/2, dogART.head:getHeight()/2)
-    love.graphics.draw(dogART.frleg, dogPOS.frlegX, dogPOS.frlegY, dogPOS.frlegAngle, 1, 1, dogART.frleg:getWidth()/2, dogART.frleg:getHeight()/2+15)
-    love.graphics.draw(dogART.bkleg, dogPOS.bklegX, dogPOS.bklegY, dogPOS.bklegAngle, 1, 1, dogART.bkleg:getWidth()/2, dogART.bkleg:getHeight()/2+10)
-    love.graphics.draw(dogART.tail, dogPOS.tailX, dogPOS.tailY, dogPOS.tailAngle, 1, 0.65, dogART.tail:getWidth()/2, dogART.tail:getHeight()/2-15)
+        love.graphics.draw(dogART.butt, dogPOS.buttX, dogPOS.buttY, dogPOS.buttAngle, 1, 1, dogART.butt:getWidth()/2-10, dogART.butt:getHeight()/2)
+        love.graphics.draw(dogART.chest, dogPOS.chestX, dogPOS.chestY, dogPOS.chestAngle, 1, 1, dogART.chest:getWidth()/2+20, dogART.chest:getHeight()/2+7)
+        love.graphics.draw(dogART.head, dogPOS.headX, dogPOS.headY, dogPOS.headAngle, 1, 1, dogART.head:getWidth()/2, dogART.head:getHeight()/2)
+        love.graphics.draw(dogART.frleg, dogPOS.frlegX, dogPOS.frlegY, dogPOS.frlegAngle, 1, 1, dogART.frleg:getWidth()/2, dogART.frleg:getHeight()/2+15)
+        love.graphics.draw(dogART.bkleg, dogPOS.bklegX, dogPOS.bklegY, dogPOS.bklegAngle, 1, 1, dogART.bkleg:getWidth()/2, dogART.bkleg:getHeight()/2+10)
+        love.graphics.draw(dogART.tail, dogPOS.tailX, dogPOS.tailY, dogPOS.tailAngle, 1, 0.65, dogART.tail:getWidth()/2, dogART.tail:getHeight()/2-15)
+    end
     
 end
 

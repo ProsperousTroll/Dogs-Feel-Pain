@@ -13,7 +13,16 @@ gameState = {
     Main = false,
     Menu = true,    
     Pause = false,
+    Shop = false,
 }
+
+-- Function to switch states, allows only one state to be true at a time.
+function setGameState(stateName)
+    for k in pairs(gameState) do gameState[k] = false end
+    gameState[stateName] = true
+end
+
+----- LOVE.LOAD -----
 
 function love.load()
 
@@ -26,10 +35,7 @@ function love.load()
     world:addCollisionClass('dogBody')
     world:addCollisionClass('dogLimb', {ignores = {'dogBody'}})
 
-     -- Load dog
-    dog.load()   
-
-    -- Load objects
+    -- Load objects art assets
     objects.load()
 
     -- The walls/floor of the world
@@ -45,6 +51,49 @@ function love.load()
 
 end
 
+
+function initMain()    
+    if not gameState.Main then
+        setGameState("Main")
+        dog.load()
+    end
+end
+
+function initMenu()
+    if not gameState.Menu then
+        if dogVisible then
+           dog.destroy()
+        end
+        objects.destroy()
+        setGameState("Menu")
+    end
+end
+
+function initPause()
+    if gameState.Main then
+        gameState.Main = false
+        gameState.Pause = true
+        -- Disable player from being able to interact with objects while paused
+        if mouseJoint then
+            mouseJoint:destroy()
+            mouseJoint = nil
+            grabbedCollider = nil
+        end
+    elseif gameState.Pause then
+        gameState.Pause = false
+        gameState.Main = true
+    end
+end
+    
+function initShop()
+    if not gameState.Shop then
+        setGameState("Shop")
+        if dogVisible then
+            dog.destroy()
+        end
+    end
+end
+
 -- Keyboard input handling
 function love.keypressed(key, isrepeat)
 
@@ -57,24 +106,36 @@ function love.keypressed(key, isrepeat)
     
     
     -- Pause game with "escape"
-    if key == "escape" and gameState.Main == true then
-        gameState.Main = false
-        gameState.Pause = true
-        -- Disable player from being able to interact with objects while paused
-        if mouseJoint then
-            mouseJoint:destroy()
-            mouseJoint = nil
-            grabbedCollider = nil
-        end
-    elseif key == "escape" and gameState.Pause == true then
-        gameState.Pause = false
-        gameState.Main = true
+    if key == "escape" then
+       initPause()
     end
     
     -- Begin game with "enter"
     if key == "return" and gameState.Menu then
-        gameState.Menu = false
-        gameState.Main = true
+        initMain()
+    elseif key == "return" and not gameState.Menu then
+        initMenu()
+    end
+    
+    -- Open shop
+    if key == "space" and gameState.Main then
+        initShop()
+    elseif key == "space" and gameState.Shop then
+        initMain()
+    end
+
+    
+    -- TEMP DEBUG... Spawn either bat or bottle 
+    if key == "q" and gameState.Main and itemState.beerBottle and not grabbedCollider then
+        objects.destroy()
+    end
+    
+    if key == "e" and gameState.Main and not itemState.beerBottle then
+        loadBeer()
+    end
+    
+    if key == "r" and gameState.Main and not itemState.axeBat then
+        loadAxeBat()
     end
 
 end
@@ -90,7 +151,9 @@ function love.mousepressed(x, y, button)
             grabbedCollider = colliders[1]
             local body = grabbedCollider.body
             mouseJoint = love.physics.newMouseJoint(body, x, y)
-       end
+        end
+       
+
     end
 
 end
@@ -100,7 +163,6 @@ function love.mousemoved(x, y, dx, dy)
     if mouseJoint then
         mouseJoint:setTarget(x,y)
     end
-
 end
 
 function love.mousereleased(x, y, button)
@@ -110,7 +172,7 @@ function love.mousereleased(x, y, button)
         mouseJoint = nil
         grabbedCollider = nil
     end
-
+    
 end
 
 
@@ -123,7 +185,7 @@ end
 function love.draw()
     -- Draw dog sprites over colliders 
     if gameState.Main or gameState.Pause then
-       dog.draw()
+        dog.draw()
     end
 
     -- Draw object sprites over colliders
@@ -133,12 +195,12 @@ function love.draw()
 
     -- Enable debug mode 
     if debugMode then
-        world:draw()
+       world:draw()
     end
     
     -- Pause text 
     if gameState.Pause then
-        love.graphics.print("Pawsed", 325, 275)
+        love.graphics.print("Pawsed", 360, 275)
     end
     
     -- Main menu logo (VERY TEMPORARY)
