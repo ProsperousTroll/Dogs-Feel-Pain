@@ -73,6 +73,15 @@ function dog.destroy()
 
 end
 
+function dog.update(dt)
+   -- basic collision test  
+    if DOG.head:enter('Object') then
+       cash.Wallet = cash.Wallet + 1 
+    end
+    
+    
+end
+
 function dog.draw()
     if dogVisible then
 -- Declaring position variables to match sprite position to collision position

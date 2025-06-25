@@ -13,6 +13,11 @@ local bg
 local grabbedCollider = nil
 local mouseJoint = nil
 
+-- Placeholder money system
+cash = {}
+cash.Wallet = 0
+cash.Multiplier = 1
+
 -- States
 local debugMode = false
 gameState = {
@@ -45,6 +50,7 @@ function love.load()
     
     -- establish collision classes
     world:addCollisionClass('Interactive')
+    world:addCollisionClass('Object')
     world:addCollisionClass('dogBody')
     world:addCollisionClass('dogLimb', {ignores = {'dogBody'}})
 
@@ -166,15 +172,29 @@ function love.mousereleased(x, y, button)
     
 end
 
+-------------------
+--- LOVE UPDATE ---
+-------------------
 
 function love.update(dt)
     
     -- Update slab (ui library)
     ui.update(dt)
 
+    -- Update physics world (windfield) 
     if gameState.Main then
         world:update(dt)
+        dog:update(dt)
+        
+   -- basic collision test  
+        if DOG.head:enter('Interactive') then
+            cash.Wallet = cash.Wallet + cash.Multiplier 
+        end
+
+
     end
+    
+
 end
 
 function love.draw()
@@ -211,6 +231,9 @@ function love.draw()
 
     -- Draw UI elements (Slab)
     ui.draw()
+    
+    -- TEMP print cash value 
+    love.graphics.print(cash.Wallet, 25, 25)
 
 
     -- background 
