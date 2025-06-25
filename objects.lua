@@ -21,21 +21,8 @@ local objects = {}
 
 -- Item states 
 itemState = {
-    note = false,
-    ikeaBag = false,
-    poopSock = false,
-    chocolate = false,
     beerBottle = false,
-    frisbee = false,
-    shockCollar = false,
-    meatHook = false,
     axeBat = false,
-    nickeBall = false,
-    hotCar = false,
-    nanaPop = false,
-    injection = false,
-    pissNuke = false,
-    brofist = false,
 }
 
 function objects.load()
@@ -49,6 +36,7 @@ function objects.load()
 end
 
 function loadBeer()
+    
     itemState.beerBottle = true
 
 -- Beer bottle collider
@@ -56,7 +44,8 @@ function loadBeer()
 
     BOTTLE.col = world:newRectangleCollider(winWidth/2-36/2, 100, 36, 112)
     BOTTLE.col:setRestitution(0.4)
-    BOTTLE.col:setCollisionClass('Interactive')
+    BOTTLE.col:setCollisionClass('Object')
+    
 end
 
 function loadAxeBat()
@@ -65,7 +54,7 @@ function loadAxeBat()
 -- Temp bludgeoning tool
     BAT = {}
     BAT.col = world:newRectangleCollider(winWidth/2-250/2, 100, 250, 40)
-    BAT.col:setCollisionClass('Interactive')
+    BAT.col:setCollisionClass('Object')
     BAT.col:setRestitution(0.3)
 end
 

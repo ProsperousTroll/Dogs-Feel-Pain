@@ -1,20 +1,26 @@
+local sk = require 'skins'
 local dog = {}
 local xOffset = 180
 local yOffset = 600
+skin = "base"
+
 dogVisible = false
 
 function dog.load()
     
-    -- Make dog visible 
+    -- Make dog visible
     dogVisible = true
-    -- ART ASSETS 
+    -- Set Base Skin  
     dogART = {}
-    dogART.head = love.graphics.newImage("assets/ugly dog head.png")
-    dogART.chest = love.graphics.newImage("assets/ugly dog chest.png")
-    dogART.butt = love.graphics.newImage("assets/ugly dog butt.png")
-    dogART.tail = love.graphics.newImage("assets/ugly dog tail.png")
-    dogART.frleg = love.graphics.newImage("assets/ugly dog fleg.png")
-    dogART.bkleg = love.graphics.newImage("assets/ugly dog bkleg.png")
+    dogART.head = love.graphics.newImage("assets/Skins/Base/ugly dog head.png")
+    dogART.chest = love.graphics.newImage("assets/Skins/Base/ugly dog chest.png")
+    dogART.butt = love.graphics.newImage("assets/Skins/Base/ugly dog butt.png")
+    dogART.tail = love.graphics.newImage("assets/Skins/Base/ugly dog tail.png")
+    dogART.frleg = love.graphics.newImage("assets/Skins/Base/ugly dog fleg.png")
+    dogART.bkleg = love.graphics.newImage("assets/Skins/Base/ugly dog bkleg.png")
+    
+
+    setSkin("base")
     
      -- colliders 
     DOG = {}
@@ -52,14 +58,31 @@ function dog.load()
     DOG.butt:setRestitution(0.8)
     
         -- setting entire dog to class 'interactive' (making all parts clickable)
-    DOG.head:setCollisionClass('Interactive', 'dogBody')            
-    DOG.chest:setCollisionClass('Interactive', 'dogBody')
-    DOG.butt:setCollisionClass('Interactive', 'dogBody')
-    DOG.frLeg:setCollisionClass('Interactive', 'dogLimb')
-    DOG.bkLeg:setCollisionClass('Interactive', 'dogLimb')
-    DOG.tail:setCollisionClass('Interactive', 'dogLimb')
+    DOG.head:setCollisionClass('Interactive')            
+    DOG.chest:setCollisionClass('Interactive')
+    DOG.butt:setCollisionClass('Interactive')
+    DOG.frLeg:setCollisionClass('Interactive')
+    DOG.bkLeg:setCollisionClass('Interactive')
+    DOG.tail:setCollisionClass('Interactive')
 
 end
+
+function setSkin(skin)
+    for k in pairs(dogART) do
+        if skin == "base" then
+            dogART[k] = baseSkin[k]
+        end
+        
+        if skin == "benny" then
+            dogART[k] = bennySkin[k]
+        end
+        
+        if skin == "photobash" then
+            dogART[k] = photoSkin[k]
+        end
+    end
+end
+
 
 function dog.destroy()
 
@@ -73,14 +96,28 @@ function dog.destroy()
 
 end
 
-function dog.update(dt)
-   -- basic collision test  
-    if DOG.head:enter('Object') then
-       cash.Wallet = cash.Wallet + 1 
+function dog.hurt()
+    for k, v in pairs(DOG) do
+        if type(v) == "table" and v.exit then
+            if v:exit('Object') then
+                cash.Wallet = cash.Wallet + cash.Multiplier
+            end
+        end
     end
+end
+
+
+
+function dog.update(dt)
+
+   -- basic collision test  
+    dog.hurt()
+
     
     
 end
+
+
 
 function dog.draw()
     if dogVisible then

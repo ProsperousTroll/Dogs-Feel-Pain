@@ -1,3 +1,7 @@
+--------------------
+---- VARIABLES -----
+-------------------- 
+
 -- Load libraries and other .lua files
 local wf = require 'libraries/windfield/windfield'
 local Slab = require 'libraries/Slab'
@@ -13,10 +17,10 @@ local bg
 local grabbedCollider = nil
 local mouseJoint = nil
 
--- Placeholder money system
+-- Money system
 cash = {}
 cash.Wallet = 0
-cash.Multiplier = 1
+cash.Multiplier = 0.03
 
 -- States
 local debugMode = false
@@ -26,21 +30,15 @@ gameState = {
     Shop = false,
 }
 
-
--- Function to switch states, allows only one state to be true at a time.
-function setGameState(stateName)
-    for k in pairs(gameState) do gameState[k] = false end
-    gameState[stateName] = true
-end
-
+---------------------
 ----- LOVE.LOAD -----
+---------------------
 
 function love.load()
 
     -- Load slab
     ui.load()
     
-
     -- Get window width + height
     winWidth, winHeight = love.graphics.getDimensions() 
 
@@ -51,8 +49,6 @@ function love.load()
     -- establish collision classes
     world:addCollisionClass('Interactive')
     world:addCollisionClass('Object')
-    world:addCollisionClass('dogBody')
-    world:addCollisionClass('dogLimb', {ignores = {'dogBody'}})
 
     -- Load objects art assets
     objects.load()
@@ -73,6 +69,17 @@ function love.load()
     logo = love.graphics.newImage("assets/templogo.png")
     bg = love.graphics.newImage("assets/BG.png")
 
+end
+
+
+---------------------
+----- FUNCTIONS -----
+---------------------
+
+-- Function to switch states, allows only one state to be true at a time.
+function setGameState(stateName)
+    for k in pairs(gameState) do gameState[k] = false end
+    gameState[stateName] = true
 end
 
 
@@ -107,6 +114,10 @@ function initShop()
     end
 end
 
+------------------
+----- INPUTS -----
+------------------
+
 -- Keyboard input handling
 function love.keypressed(key, isrepeat)
 
@@ -134,15 +145,29 @@ function love.keypressed(key, isrepeat)
     if key == "q" and gameState.Main and not grabbedCollider then
         objects.destroy()
     end
+    
+    if key == "1" then
+        setSkin("base")
+    end
+    
+    if key == "2" then
+        setSkin("benny")
+    end
+    
+    if key == "3" then
+        setSkin("photobash")
+    end
+
 
 end
+
 
 function love.mousepressed(x, y, button)
     
 -- Create mouse joint if mouse button 1 is clicked over interactive object
     if button == 1 and not grabbedCollider and gameState.Main then
         -- find interactable collider under mouse
-        local colliders = world:queryCircleArea(x, y, 20, {'Interactive'})
+        local colliders = world:queryCircleArea(x, y, 20, {'Interactive', 'Object'})
 
         if #colliders > 0 then
             grabbedCollider = colliders[1]
@@ -185,23 +210,17 @@ function love.update(dt)
     if gameState.Main then
         world:update(dt)
         dog:update(dt)
-        
-   -- basic collision test  
-        if DOG.head:enter('Interactive') then
-            cash.Wallet = cash.Wallet + cash.Multiplier 
-        end
-
-
     end
-    
 
 end
+
+---------------------
+----- LOVE.DRAW -----
+---------------------
 
 function love.draw()
     -- Draw background
     love.graphics.draw(bg, winWidth/2-bg:getWidth()/2, winHeight/2-bg:getHeight()/2)
-
-
 
     -- Draw dog sprites over colliders 
     if gameState.Main or gameState.Shop then
@@ -233,7 +252,11 @@ function love.draw()
     ui.draw()
     
     -- TEMP print cash value 
-    love.graphics.print(cash.Wallet, 25, 25)
+    if gameState.Main or gameState.Shop then
+        love.graphics.print("Wallet: $" .. cash.Wallet, 25, 25)
+    end
+    
+    
 
 
     -- background 
