@@ -23,6 +23,7 @@ local objects = {}
 items = {
     beerBottle = false,
     axeBat = false,
+    ikeaBag = false,
 }
 
 function objects.load()
@@ -32,6 +33,16 @@ function objects.load()
     miscART.bat = love.graphics.newImage("assets/bat.png")
     miscART.bottle = love.graphics.newImage("assets/beer bottle.png")
     
+
+end
+
+function loadIkeaBag()
+
+    items.ikeaBag = true
+    
+    items.ikeaBagCol1 = world:newRectangleCollider(winWidth/2-250/2, 100+150, 250, 10)
+    items.ikeaBagCol2 = world:newRectangleCollider(winWidth/2-(10-250/2), 100, 10, 150)
+    items.ikeaBagCol3 = world:newRectangleCollider(winWidth/2-(250/2), 100, 10, 150)
 
 end
 
@@ -94,6 +105,7 @@ function objects.destroy()
     end
 
 end
+
 
 function objects.draw()
 

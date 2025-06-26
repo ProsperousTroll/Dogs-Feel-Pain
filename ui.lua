@@ -57,6 +57,11 @@ function ui.update(dt)
             AutoSizeWindow = false,
             NoSavedSettings = true,
         })
+        
+       if Slab.Button("Ikea Bag") and not items.ikeaBag then
+           objects:destroy()
+           loadIkeaBag()
+       end
 
        if Slab.Button("Axe Bat") and not items.axeBat then
             objects:destroy()
