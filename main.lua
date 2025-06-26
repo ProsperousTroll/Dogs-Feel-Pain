@@ -211,6 +211,10 @@ function love.update(dt)
         world:update(dt)
         dog:update(dt)
     end
+    
+    if items.axeBat or items.beerBottle then
+        objects.speed()
+    end
 
 end
 
@@ -256,7 +260,9 @@ function love.draw()
         love.graphics.print("Wallet: $" .. cash.Wallet, 25, 25)
     end
     
-    
+   if items.axeBat or items.beerBottle then 
+        love.graphics.print(speed, 25, 50)
+   end
 
 
     -- background 

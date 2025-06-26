@@ -19,8 +19,8 @@
 
 local objects = {}
 
--- Item states 
-itemState = {
+-- Items
+items = {
     beerBottle = false,
     axeBat = false,
 }
@@ -37,37 +37,57 @@ end
 
 function loadBeer()
     
-    itemState.beerBottle = true
+    items.beerBottle = true
 
 -- Beer bottle collider
-    BOTTLE = {}    
-
-    BOTTLE.col = world:newRectangleCollider(winWidth/2-36/2, 100, 36, 112)
-    BOTTLE.col:setRestitution(0.4)
-    BOTTLE.col:setCollisionClass('Object')
+    items.beerBottleCol = world:newRectangleCollider(winWidth/2-36/2, 100, 36, 112)
+    items.beerBottleCol:setRestitution(0.4)
+    items.beerBottleCol:setCollisionClass('Object')
     
 end
 
 function loadAxeBat()
-    itemState.axeBat = true
+    items.axeBat = true
 
 -- Temp bludgeoning tool
-    BAT = {}
-    BAT.col = world:newRectangleCollider(winWidth/2-250/2, 100, 250, 40)
-    BAT.col:setCollisionClass('Object')
-    BAT.col:setRestitution(0.3)
+    items.axeBatCol = world:newRectangleCollider(winWidth/2-250/2, 100, 250, 40)
+    items.axeBatCol:setCollisionClass('Object')
+    items.axeBatCol:setRestitution(0.3)
+end
+
+function objects.speed()
+    for k, v in pairs(items) do
+        if type(v) == "table" and v.getLinearVelocity then
+            local vx, vy = v:getLinearVelocity()
+            speed = (vx+vy)/2
+            return speed
+        end
+    end
+
 end
 
 function objects.destroy()
     
-    if itemState.axeBat then
-        BAT.col:destroy()
-        itemState.axeBat = false
+    -- for loop to run destroy function, breaks game. will come back later.
+
+  --[[  for k, v in pairs(items) do
+         if type(v) == "boolean" then
+            v = false
+        end
+
+        if type(v) == "table" and v.destroy then
+            v:destroy()
+        end
+    end
+ --]]
+    if items.axeBat then
+        items.axeBatCol:destroy()
+        items.axeBat = false
     end
     
-    if itemState.beerBottle then
-        BOTTLE.col:destroy()
-        itemState.beerBottle = false
+    if items.beerBottle then
+        items.beerBottleCol:destroy()
+        items.beerBottle = false
     end
 
 end
@@ -76,11 +96,11 @@ function objects.draw()
 
      local objPOS = {}
     
-    if itemState.axeBat then
+    if items.axeBat then
         
     -- Get object position and angl
-        objPOS.batX, objPOS.batY = BAT.col:getPosition()
-        objPOS.batAngle = BAT.col:getAngle()
+        objPOS.batX, objPOS.batY = items.axeBatCol:getPosition()
+        objPOS.batAngle = items.axeBatCol:getAngle()
 
 
     -- Draw object sprites over colliders
@@ -88,9 +108,10 @@ function objects.draw()
 
     end
     
-    if itemState.beerBottle then
-        objPOS.bottleX, objPOS.bottleY = BOTTLE.col:getPosition()
-        objPOS.bottleAngle = BOTTLE.col:getAngle()
+    if items.beerBottle then
+
+        objPOS.bottleX, objPOS.bottleY = items.beerBottleCol:getPosition()
+        objPOS.bottleAngle = items.beerBottleCol:getAngle()
         
         love.graphics.draw(miscART.bottle, objPOS.bottleX, objPOS.bottleY, objPOS.bottleAngle, 1, 1, miscART.bottle:getWidth()/2, miscART.bottle:getHeight()/2)
 

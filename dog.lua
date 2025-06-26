@@ -98,8 +98,8 @@ end
 
 function dog.hurt()
     for k, v in pairs(DOG) do
-        if type(v) == "table" and v.exit then
-            if v:exit('Object') then
+        if type(v) == "table" and v.enter then
+            if v:enter('Object') then
                 cash.Wallet = cash.Wallet + cash.Multiplier
             end
         end

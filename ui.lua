@@ -58,12 +58,12 @@ function ui.update(dt)
             NoSavedSettings = true,
         })
 
-       if Slab.Button("Axe Bat") and not itemState.axeBat then
+       if Slab.Button("Axe Bat") and not items.axeBat then
             objects:destroy()
             loadAxeBat()
        end
 
-       if Slab.Button("Beer Bottle") and not itemState.beerBotte then
+       if Slab.Button("Beer Bottle") and not items.beerBottle then
             objects:destroy()
             loadBeer()
        end
