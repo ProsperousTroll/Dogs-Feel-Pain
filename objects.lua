@@ -57,9 +57,12 @@ end
 
 function objects.speed()
     for k, v in pairs(items) do
-        if type(v) == "table" and v.getLinearVelocity then
+        if type(v) == "table" and v.body and not v.body:isDestroyed() then
             local vx, vy = v:getLinearVelocity()
             speed = (vx+vy)/2
+            if speed < 0 then
+                speed = speed * -1
+            end
             return speed
         end
     end
@@ -81,13 +84,13 @@ function objects.destroy()
     end
  --]]
     if items.axeBat then
-        items.axeBatCol:destroy()
         items.axeBat = false
+        items.axeBatCol:destroy()
     end
     
     if items.beerBottle then
+        items.beerBottle = false 
         items.beerBottleCol:destroy()
-        items.beerBottle = false
     end
 
 end

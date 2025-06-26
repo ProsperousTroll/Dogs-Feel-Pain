@@ -99,7 +99,7 @@ end
 function dog.hurt()
     for k, v in pairs(DOG) do
         if type(v) == "table" and v.enter then
-            if v:enter('Object') then
+            if v:enter('Object') and speed > 500 then
                 cash.Wallet = cash.Wallet + cash.Multiplier
             end
         end
