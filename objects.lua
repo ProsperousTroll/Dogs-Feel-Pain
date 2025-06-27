@@ -32,6 +32,7 @@ function objects.load()
     miscART = {}
     miscART.bat = love.graphics.newImage("assets/bat.png")
     miscART.bottle = love.graphics.newImage("assets/beer bottle.png")
+    miscART.ikeaBag = love.graphics.newImage("assets/ikeabag.png")
     
 
 end
@@ -42,8 +43,8 @@ function loadIkeaBag()
     IKEA = {}
     
     IKEA.Col1 = world:newRectangleCollider(winWidth/2-250/2, 100+150, 250, 10)
-    IKEA.Col2 = world:newRectangleCollider(winWidth/2-(10-250/2), 100, 10, 150)
-    IKEA.Col3 = world:newRectangleCollider(winWidth/2-(250/2), 100, 10, 150)
+    IKEA.Col2 = world:newRectangleCollider(winWidth/2-(20-250/2), 100, 20, 150)
+    IKEA.Col3 = world:newRectangleCollider(winWidth/2-(250/2), 100, 20, 150)
     IKEA.Handle = world:newRectangleCollider(winWidth/2-100/2, 50, 100, 10)
     
 
@@ -150,6 +151,14 @@ function objects.draw()
         
         love.graphics.draw(miscART.bottle, objPOS.bottleX, objPOS.bottleY, objPOS.bottleAngle, 1, 1, miscART.bottle:getWidth()/2, miscART.bottle:getHeight()/2)
 
+    end
+    
+    if items.ikeaBag then 
+        
+        objPOS.bagX, objPOS.bagY = IKEA.Col1:getPosition()
+        objPOS.bagAngle = IKEA.Col1:getAngle()
+        
+        love.graphics.draw(miscART.ikeaBag, objPOS.bagX, objPOS.bagY, objPOS.bagAngle, 1, 1, miscART.ikeaBag:getWidth()/2, miscART.ikeaBag:getHeight())
     end
 
 end
