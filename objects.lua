@@ -1,20 +1,20 @@
 -- Potential list of items player can buy:
 --
--- A mean note
--- Ikea bag
--- Poop Sock
--- Chocolate
--- Beer bottle
--- Frisbee
--- Shock Collar 
--- Meat hook
--- Axe bat
--- Red Hot Nickel Ball
--- Hot Car
--- Nana + pop pop's house
--- Injection 
--- Piss Nuke 
--- The Legendary Brofist
+-- A mean note [ - ]
+-- Ikea bag [ X ]
+-- Poop Sock [ - ]
+-- Chocolate [ - ]
+-- Beer bottle [ - ]
+-- Frisbee [ - ]
+-- Shock Collar [ - ] 
+-- Meat hook [ - ]
+-- Axe bat [ - ]
+-- Red Hot Nickel Ball [ - ]
+-- Hot Car [ - ]
+-- Nana + pop pop's house [ - ]
+-- Injection [ - ]
+-- Piss Nuke [ - ]
+-- The Legendary Brofist [ - ]
 
 
 local objects = {}
@@ -40,22 +40,21 @@ end
 function loadIkeaBag()
 
     items.ikeaBag = true
-    IKEA = {}
     
-    IKEA.Col1 = world:newRectangleCollider(winWidth/2-250/2, 100+150, 250, 10)
-    IKEA.Col2 = world:newRectangleCollider(winWidth/2-(20-250/2), 100, 20, 150)
-    IKEA.Col3 = world:newRectangleCollider(winWidth/2-(250/2), 100, 20, 150)
-    IKEA.Handle = world:newRectangleCollider(winWidth/2-100/2, 50, 100, 10)
+    items.ikeaBagCol1 = world:newRectangleCollider(winWidth/2-250/2, 100+150, 250, 10)
+    items.ikeaBagCol2 = world:newRectangleCollider(winWidth/2-(20-250/2), 100, 20, 150)
+    items.ikeaBagCol3 = world:newRectangleCollider(winWidth/2-(250/2), 100, 20, 150)
+    items.ikeaBagHandle = world:newRectangleCollider(winWidth/2-100/2, 50, 100, 10)
     
 
-    IKEA.Col1:setCollisionClass('Object')
-    IKEA.Col2:setCollisionClass('Object')
-    IKEA.Col3:setCollisionClass('Object')
-    IKEA.Handle:setCollisionClass('Handle')
+    items.ikeaBagCol1:setCollisionClass('Object')
+    items.ikeaBagCol2:setCollisionClass('Object')
+    items.ikeaBagCol3:setCollisionClass('Object')
+    items.ikeaBagHandle:setCollisionClass('Handle')
     
-    IKEA.Joint1 = world:addJoint('WeldJoint', IKEA.Col1, IKEA.Col2, winWidth/2-(10-260/2), 250, false)
-    IKEA.Joint2 = world:addJoint('WeldJoint', IKEA.Col1, IKEA.Col3, winWidth/2-(240/2), 250, false)
-    IKEA.Joint3 = world:addJoint('WeldJoint', IKEA.Col1, IKEA.Handle, winWidth/2-100/2, 100, false)
+    items.ikeaBagJoint1 = world:addJoint('WeldJoint', items.ikeaBagCol1, items.ikeaBagCol2, winWidth/2-(10-260/2), 250, false)
+    items.ikeaBagJoint2 = world:addJoint('WeldJoint', items.ikeaBagCol1, items.ikeaBagCol3, winWidth/2-(240/2), 250, false)
+    items.ikeaBagJoint3 = world:addJoint('WeldJoint', items.ikeaBagCol1, items.ikeaBagHandle, winWidth/2-100/2, 100, false)
 
 end
 
@@ -79,6 +78,7 @@ function loadAxeBat()
     items.axeBatCol:setRestitution(0.3)
 end
 
+-- Detect how fast the active object is moving, in order to register dog.hurt()
 function objects.speed(Table)
     for k, v in pairs(Table) do
         if type(v) == "table" and v.body and not v.body:isDestroyed() then
@@ -94,37 +94,20 @@ end
 
 function objects.destroy()
     
-    -- for loop to run destroy function, breaks game. will come back later.
+    -- for loop to run destroy function. NO LONGER BREAKS GAME. I AM SO SMART.
 
-  --[[  for k, v in pairs(items) do
-         if type(v) == "boolean" then
-            v = false
+    for k, v in pairs(items) do
+        if items[k] == true then
+            items[k] = false
         end
 
-        if type(v) == "table" and v.destroy then
+        if type(v) == "table" and v.body and not v:isDestroyed() then
             v:destroy()
         end
     end
- --]]
-    if items.axeBat then
-        items.axeBat = false
-        items.axeBatCol:destroy()
-    end
     
-    if items.beerBottle then
-        items.beerBottle = false 
-        items.beerBottleCol:destroy()
-    end
-    
-    
-    if items.ikeaBag then
-        items.ikeaBag = false
-        for k, v in pairs(IKEA) do
-            if type(v) == "table" and v.destroy then
-                v:destroy()
-            end
-        end
-    end
+    cash.Multiplier = 0.03
+
 end
 
 
@@ -155,8 +138,8 @@ function objects.draw()
     
     if items.ikeaBag then 
         
-        objPOS.bagX, objPOS.bagY = IKEA.Col1:getPosition()
-        objPOS.bagAngle = IKEA.Col1:getAngle()
+        objPOS.bagX, objPOS.bagY = items.ikeaBagCol1:getPosition()
+        objPOS.bagAngle = items.ikeaBagCol1:getAngle()
         
         love.graphics.draw(miscART.ikeaBag, objPOS.bagX, objPOS.bagY, objPOS.bagAngle, 1, 1, miscART.ikeaBag:getWidth()/2, miscART.ikeaBag:getHeight())
     end

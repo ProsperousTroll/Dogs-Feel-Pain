@@ -13,9 +13,20 @@ uiHeight.Shop = 200
 uiWidth.Menu = 100
 uiHeight.Menu = 50
 
+local itemPurchased = {
+    axeBat = false,
+    beerBottle = false,
+    beerBottlePrice = "Beer Bottle - $0.50",
+}
+
 function ui.load(args)
     Slab.Initialize(args)
+    
+
+
 end
+
+
 
 function ui.update(dt)
     Slab.Update(dt)
@@ -58,21 +69,30 @@ function ui.update(dt)
             NoSavedSettings = true,
         })
         
+        
        if Slab.Button("Ikea Bag") and not items.ikeaBag then
-           objects:destroy()
-           loadIkeaBag()
+            objects:destroy()
+            loadIkeaBag()
        end
 
-       if Slab.Button("Axe Bat") and not items.axeBat then
+       if Slab.Button(itemPurchased.beerBottlePrice) and not items.beerBottle then
+            if not itemPurchased.beerBottle and cash.Wallet >= 0.5 then
+                cash.Wallet = cash.Wallet - 0.5
+                itemPurchased.beerBottlePrice = "Beer Bottle"
+                itemPurchased.beerBottle = true
+                objects:destroy()
+                loadBeer()
+            elseif itemPurchased.beerBottle then
+                objects:destroy()
+                loadBeer()
+            end
+       end
+
+        if Slab.Button("Axe Bat") and not items.axeBat then
             objects:destroy()
             loadAxeBat()
-       end
+       end       
 
-       if Slab.Button("Beer Bottle") and not items.beerBottle then
-            objects:destroy()
-            loadBeer()
-       end
-        
        if Slab.Button("Return") then
             initMain()
        end

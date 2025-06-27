@@ -1,6 +1,6 @@
 --------------------
 ---- VARIABLES -----
--------------------- 
+--------------------
 
 -- Load libraries and other .lua files
 local wf = require 'libraries/windfield/windfield'
@@ -159,6 +159,10 @@ function love.keypressed(key, isrepeat)
     if key == "3" then
         setSkin("photobash")
     end
+    
+    if key == "4" then
+        setSkin("red")
+    end
 
 
 end
@@ -215,10 +219,8 @@ function love.update(dt)
     end
     
     -- Calculate object speed
-    if gameState.Main and not items.ikeaBag then
+    if gameState.Main then
         objects.speed(items)
-    elseif items.ikeaBag then
-        objects.speed(IKEA)
     end
 
 end

@@ -80,6 +80,10 @@ function setSkin(skin)
         if skin == "photobash" then
             dogART[k] = photoSkin[k]
         end
+        
+        if skin == "red" then
+            dogART[k] = redSkin[k]
+        end
     end
 end
 

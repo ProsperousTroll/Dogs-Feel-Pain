@@ -25,3 +25,12 @@
     photoSkin.tail = love.graphics.newImage("assets/Skins/Photo/ugly_dog_tailreal.png")
     photoSkin.frleg = love.graphics.newImage("assets/Skins/Photo/ugly_dog_flegreal.png")
     photoSkin.bkleg = love.graphics.newImage("assets/Skins/Photo/ugly_dog_bklegreal.png")
+    
+    redSkin = {}
+    
+    redSkin.head = love.graphics.newImage("assets/Skins/Red/redhead.png")
+    redSkin.chest = love.graphics.newImage("assets/Skins/Red/redchest2.png")
+    redSkin.butt = love.graphics.newImage("assets/Skins/Red/redbutt2.png")
+    redSkin.tail = love.graphics.newImage("assets/Skins/Red/redtail.png")
+    redSkin.frleg = love.graphics.newImage("assets/Skins/Red/redfleg.png")
+    redSkin.bkleg = love.graphics.newImage("assets/Skins/Red/redbkleg.png")
