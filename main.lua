@@ -49,6 +49,8 @@ function love.load()
     -- establish collision classes
     world:addCollisionClass('Interactive')
     world:addCollisionClass('Object')
+    world:addCollisionClass('Dog')
+    world:addCollisionClass('Handle', {ignores = {'Dog'}})
 
     -- Load objects art assets
     objects.load()
@@ -167,7 +169,7 @@ function love.mousepressed(x, y, button)
 -- Create mouse joint if mouse button 1 is clicked over interactive object
     if button == 1 and not grabbedCollider and gameState.Main then
         -- find interactable collider under mouse
-        local colliders = world:queryCircleArea(x, y, 20, {'Interactive', 'Object'})
+        local colliders = world:queryCircleArea(x, y, 20, {'Interactive', 'Object', 'Dog', 'Handle'})
 
         if #colliders > 0 then
             grabbedCollider = colliders[1]
@@ -212,8 +214,11 @@ function love.update(dt)
         dog:update(dt)
     end
     
-    if gameState.Main and items.axeBat or items.beerBottle then
-        objects.speed()
+    -- Calculate object speed
+    if gameState.Main and not items.ikeaBag then
+        objects.speed(items)
+    elseif items.ikeaBag then
+        objects.speed(IKEA)
     end
 
 end

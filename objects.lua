@@ -39,10 +39,22 @@ end
 function loadIkeaBag()
 
     items.ikeaBag = true
+    IKEA = {}
     
-    items.ikeaBagCol1 = world:newRectangleCollider(winWidth/2-250/2, 100+150, 250, 10)
-    items.ikeaBagCol2 = world:newRectangleCollider(winWidth/2-(10-250/2), 100, 10, 150)
-    items.ikeaBagCol3 = world:newRectangleCollider(winWidth/2-(250/2), 100, 10, 150)
+    IKEA.Col1 = world:newRectangleCollider(winWidth/2-250/2, 100+150, 250, 10)
+    IKEA.Col2 = world:newRectangleCollider(winWidth/2-(10-250/2), 100, 10, 150)
+    IKEA.Col3 = world:newRectangleCollider(winWidth/2-(250/2), 100, 10, 150)
+    IKEA.Handle = world:newRectangleCollider(winWidth/2-100/2, 50, 100, 10)
+    
+
+    IKEA.Col1:setCollisionClass('Object')
+    IKEA.Col2:setCollisionClass('Object')
+    IKEA.Col3:setCollisionClass('Object')
+    IKEA.Handle:setCollisionClass('Handle')
+    
+    IKEA.Joint1 = world:addJoint('WeldJoint', IKEA.Col1, IKEA.Col2, winWidth/2-(10-260/2), 250, false)
+    IKEA.Joint2 = world:addJoint('WeldJoint', IKEA.Col1, IKEA.Col3, winWidth/2-(240/2), 250, false)
+    IKEA.Joint3 = world:addJoint('WeldJoint', IKEA.Col1, IKEA.Handle, winWidth/2-100/2, 100, false)
 
 end
 
@@ -66,8 +78,8 @@ function loadAxeBat()
     items.axeBatCol:setRestitution(0.3)
 end
 
-function objects.speed()
-    for k, v in pairs(items) do
+function objects.speed(Table)
+    for k, v in pairs(Table) do
         if type(v) == "table" and v.body and not v.body:isDestroyed() then
             local vx, vy = v:getLinearVelocity()
             speed = (vx+vy)/2
@@ -77,7 +89,6 @@ function objects.speed()
             return speed
         end
     end
-
 end
 
 function objects.destroy()
@@ -103,7 +114,16 @@ function objects.destroy()
         items.beerBottle = false 
         items.beerBottleCol:destroy()
     end
-
+    
+    
+    if items.ikeaBag then
+        items.ikeaBag = false
+        for k, v in pairs(IKEA) do
+            if type(v) == "table" and v.destroy then
+                v:destroy()
+            end
+        end
+    end
 end
 
 

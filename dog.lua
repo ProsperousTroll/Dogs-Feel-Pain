@@ -58,12 +58,12 @@ function dog.load()
     DOG.butt:setRestitution(0.8)
     
         -- setting entire dog to class 'interactive' (making all parts clickable)
-    DOG.head:setCollisionClass('Interactive')            
-    DOG.chest:setCollisionClass('Interactive')
-    DOG.butt:setCollisionClass('Interactive')
-    DOG.frLeg:setCollisionClass('Interactive')
-    DOG.bkLeg:setCollisionClass('Interactive')
-    DOG.tail:setCollisionClass('Interactive')
+    DOG.head:setCollisionClass('Dog')            
+    DOG.chest:setCollisionClass('Dog')
+    DOG.butt:setCollisionClass('Dog')
+    DOG.frLeg:setCollisionClass('Dog')
+    DOG.bkLeg:setCollisionClass('Dog')
+    DOG.tail:setCollisionClass('Dog')
 
 end
 
@@ -99,7 +99,7 @@ end
 function dog.hurt()
     for k, v in pairs(DOG) do
         if type(v) == "table" and v.enter then
-            if v:enter('Object') and speed > 500 then
+            if v:enter('Object') and speed > 750 then
                 cash.Wallet = cash.Wallet + cash.Multiplier
             end
         end
