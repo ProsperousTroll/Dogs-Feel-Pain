@@ -16,7 +16,8 @@ uiHeight.Menu = 50
 local itemPurchased = {
     axeBat = false,
     beerBottle = false,
-    beerBottlePrice = "Beer Bottle - $0.50",
+    beerBottlePrice = "Beer Bottle - $0.25",
+    axeBatPrice = "Axe Bat - $10"
 }
 
 function ui.load(args)
@@ -76,7 +77,7 @@ function ui.update(dt)
        end
 
        if Slab.Button(itemPurchased.beerBottlePrice) and not items.beerBottle then
-            if not itemPurchased.beerBottle and cash.Wallet >= 0.5 then
+            if not itemPurchased.beerBottle and cash.Wallet >= 0.25 then
                 cash.Wallet = cash.Wallet - 0.5
                 itemPurchased.beerBottlePrice = "Beer Bottle"
                 itemPurchased.beerBottle = true
@@ -88,10 +89,18 @@ function ui.update(dt)
             end
        end
 
-        if Slab.Button("Axe Bat") and not items.axeBat then
-            objects:destroy()
-            loadAxeBat()
-       end       
+        if Slab.Button(itemPurchased.axeBatPrice) and not items.axeBat then
+            if not itemPurchased.axeBat and cash.Wallet >= 10 then
+                cash.Wallet = cash.Wallet - 10
+                itemPurchased.axeBatPrice = "Axe Bat"
+                itemPurchased.axeBat = true
+                objects:destroy()
+                loadAxeBat()
+            elseif itemPurchased.axeBat then
+                objects:destroy()
+                loadAxeBat()
+            end
+        end
 
        if Slab.Button("Return") then
             initMain()
