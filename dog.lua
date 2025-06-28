@@ -107,8 +107,8 @@ end
 function dog.hurt()
     for k, v in pairs(DOG) do
         if type(v) == "table" and v.enter then
-            if v:enter('Object') and speed > 750 then
-                cash.Wallet = cash.Wallet + cash.Multiplier
+            if v:enter('Object') and speed > 950 then
+                cash.Wallet = cash.Wallet + (cash.Base * cash.Multiplier)
             end
         end
     end
@@ -118,7 +118,7 @@ end
 
 function dog.update(dt)
 
-   -- basic collision test  
+   -- collision
     dog.hurt()
 
     

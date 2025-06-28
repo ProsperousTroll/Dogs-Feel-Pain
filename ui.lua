@@ -7,8 +7,8 @@ local ui = {}
 local uiWidth = {}
 local uiHeight = {}
 
-uiWidth.Shop = 175
-uiHeight.Shop = 200
+uiWidth.Shop = 255
+uiHeight.Shop = 300
 
 uiWidth.Menu = 100
 uiHeight.Menu = 50
@@ -17,12 +17,12 @@ uiWidth.sButton = 250
 uiHeight.sButton = 75
 
 local itemPurchased = {
-    axeBat = false,
+    bat = false,
     beerBottle = false,
     poopSock = false,
-    poopSockPrice = "Poop Sock - $2.50",
-    beerBottlePrice = "Beer Bottle - $0.50",
-    axeBatPrice = "Axe Bat - $10"
+    poopSockPrice = "Poop Sock - $5",
+    beerBottlePrice = "Beer Bottle - $1.50",
+    batPrice = "Bat - $15"
 }
 
 local uiAssets = {
@@ -73,7 +73,7 @@ function ui.update(dt)
             ResetSize = true,
             W = uiWidth.sButton,
             H = uiHeight.sButton,
-            X = winWidth-50-uiWidth.sButton,
+            X = winWidth-25-uiWidth.sButton,
             Y = 25,
             BgColor = {0.0, 0.0, 0.0, 0.0},
             NoOutline = true, 
@@ -113,16 +113,17 @@ function ui.update(dt)
             NoSavedSettings = true,
         })
         
+        Slab.Image('ShopButton', {Image = uiAssets.Shop})
         
-       if Slab.Button("Ikea Bag") and not items.ikeaBag then
+       if Slab.Button("Ikea Bag", { W = 250, H = 25, Rounding = 5}) and not items.ikeaBag then
             objects:destroy()
             loadIkeaBag()
        end
 
 
-       if Slab.Button(itemPurchased.beerBottlePrice) and not items.beerBottle then
-            if not itemPurchased.beerBottle and cash.Wallet >= 0.50 then
-                cash.Wallet = cash.Wallet - 0.50
+       if Slab.Button(itemPurchased.beerBottlePrice, { W = 250, H = 25, Rounding = 5}) and not items.beerBottle then
+            if not itemPurchased.beerBottle and cash.Wallet >= 1.50 then
+                cash.Wallet = cash.Wallet - 1.50
                 itemPurchased.beerBottlePrice = "Beer Bottle"
                 itemPurchased.beerBottle = true
                 objects:destroy()
@@ -133,9 +134,9 @@ function ui.update(dt)
             end
        end
        
-       if Slab.Button(itemPurchased.poopSockPrice) and not items.poopSock then
-           if not itemPurchased.poopSock and cash.Wallet >= 2.50 then
-               cash.Wallet = cash.Wallet - 2.50
+       if Slab.Button(itemPurchased.poopSockPrice, { W = 250, H = 25, Rounding = 5}) and not items.poopSock then
+           if not itemPurchased.poopSock and cash.Wallet >= 5 then
+               cash.Wallet = cash.Wallet - 5
                itemPurchased.poopSockPrice = "Poop Sock"
                itemPurchased.poopSock = true
                objects:destroy()
@@ -146,24 +147,24 @@ function ui.update(dt)
            end
        end
 
-        if Slab.Button(itemPurchased.axeBatPrice) and not items.axeBat then
-            if not itemPurchased.axeBat and cash.Wallet >= 10 then
-                cash.Wallet = cash.Wallet - 10.00
-                itemPurchased.axeBatPrice = "Axe Bat"
-                itemPurchased.axeBat = true
+        if Slab.Button(itemPurchased.batPrice, { W = 250, H = 25, Rounding = 5}) and not items.bat then
+            if not itemPurchased.bat and cash.Wallet >= 15 then
+                cash.Wallet = cash.Wallet - 15.00
+                itemPurchased.batPrice = "Bat"
+                itemPurchased.bat = true
                 objects:destroy()
-                loadAxeBat()
-            elseif itemPurchased.axeBat then
+                loadBat()
+            elseif itemPurchased.bat then
                 objects:destroy()
-                loadAxeBat()
+                loadBat()
             end
         end
 
-       if Slab.Button("Return") then
+       if Slab.Button("Return", { W = 250, H = 25, Rounding = 5}) then
             initMain()
        end
         
-       if Slab.Button ("Stop hurting...") then
+       if Slab.Button ("Stop hurting...", { W = 250, H = 25, Rounding = 5}) then
             initMenu()
        end
 

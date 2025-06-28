@@ -2,13 +2,13 @@
 --
 -- A mean note [ - ]
 -- Ikea bag [ X ]
--- Poop Sock [ - ]
+-- Poop Sock [ X ]
 -- Chocolate [ - ]
 -- Beer bottle [ - ]
 -- Frisbee [ - ]
 -- Shock Collar [ - ] 
 -- Meat hook [ - ]
--- Axe bat [ - ]
+-- Bat [ X ]
 -- Red Hot Nickel Ball [ - ]
 -- Hot Car [ - ]
 -- Nana + pop pop's house [ - ]
@@ -24,7 +24,7 @@ items = {
     ikeaBag = false,
     poopSock = false,
     beerBottle = false,
-    axeBat = false,
+    bat = false,
 }
 
 function objects.load()
@@ -66,13 +66,13 @@ function loadPoopSock()
     
     items.poopSock = true
     
-    items.poopSockCol2 = world:newRectangleCollider(winWidth/2+80, 100, 100, 50)
-    items.poopSockCol1 = world:newRectangleCollider(winWidth/2, 100, 100, 50)
+    items.poopSockCol2 = world:newRectangleCollider(winWidth/2+80-75, 100, 100, 50)
+    items.poopSockCol1 = world:newRectangleCollider(winWidth/2-75, 100, 100, 50)
     
     items.poopSockCol1:setCollisionClass('Object')
     items.poopSockCol2:setCollisionClass('Object')
     
-    items.PoopSockJoint = world:addJoint('RevoluteJoint', items.poopSockCol1, items.poopSockCol2, winWidth/2+100, 125, false)
+    items.PoopSockJoint = world:addJoint('RevoluteJoint', items.poopSockCol1, items.poopSockCol2, winWidth/2+25, 125, false)
 
 end
 
@@ -87,13 +87,13 @@ function loadBeer()
     
 end
 
-function loadAxeBat()
-    items.axeBat = true
+function loadBat()
+    items.bat = true
 
 -- Temp bludgeoning tool
-    items.axeBatCol = world:newRectangleCollider(winWidth/2-250/2, 100, 250, 40)
-    items.axeBatCol:setCollisionClass('Object')
-    items.axeBatCol:setRestitution(0.3)
+    items.batCol = world:newRectangleCollider(winWidth/2-250/2, 100, 250, 40)
+    items.batCol:setCollisionClass('Object')
+    items.batCol:setRestitution(0.3)
 end
 
 -- Detect how fast the active object is moving, in order to register dog.hurt()
@@ -124,34 +124,27 @@ function objects.destroy()
         end
     end
     
-    cash.Multiplier = 0.03
 
 end
 
 
+-- Function that matches sprite position to collider position..
+function positionMatch(inCol, Sprite)
+    X, Y = inCol:getPosition()
+    Angle = inCol:getAngle()
+    love.graphics.draw(Sprite, X, Y, Angle, 1, 1, Sprite:getWidth()/2, Sprite:getHeight()/2)
+end
+
+
 function objects.draw()
+    local objPOS = {}
 
-     local objPOS = {}
-    
-    if items.axeBat then
-        
-    -- Get object position and angl
-        objPOS.batX, objPOS.batY = items.axeBatCol:getPosition()
-        objPOS.batAngle = items.axeBatCol:getAngle()
-
-
-    -- Draw object sprites over colliders
-        love.graphics.draw(miscART.bat, objPOS.batX, objPOS.batY, objPOS.batAngle, 1, 1, miscART.bat:getWidth()/2, miscART.bat:getHeight()/2)
-
+    if items.bat then
+        positionMatch(items.batCol, miscART.bat)
     end
     
     if items.beerBottle then
-
-        objPOS.bottleX, objPOS.bottleY = items.beerBottleCol:getPosition()
-        objPOS.bottleAngle = items.beerBottleCol:getAngle()
-        
-        love.graphics.draw(miscART.bottle, objPOS.bottleX, objPOS.bottleY, objPOS.bottleAngle, 1, 1, miscART.bottle:getWidth()/2, miscART.bottle:getHeight()/2)
-
+        positionMatch(items.beerBottleCol, miscART.bottle)
     end
     
     if items.ikeaBag then 
@@ -163,15 +156,8 @@ function objects.draw()
     end
     
     if items.poopSock then 
-        
-        objPOS.poop2X, objPOS.poop2Y = items.poopSockCol2:getPosition()
-        objPOS.poop2Angle = items.poopSockCol2:getAngle()
-
-        objPOS.poop1X, objPOS.poop1Y = items.poopSockCol1:getPosition()
-        objPOS.poop1Angle = items.poopSockCol1:getAngle()
-        
-        love.graphics.draw(miscART.poopSock2, objPOS.poop2X, objPOS.poop2Y, objPOS.poop2Angle, 1, 1, miscART.poopSock2:getWidth()/2, miscART.poopSock2:getHeight()/2)
-        love.graphics.draw(miscART.poopSock1, objPOS.poop1X, objPOS.poop1Y, objPOS.poop1Angle, 1, 1, miscART.poopSock1:getWidth()/2, miscART.poopSock1:getHeight()/2)
+        positionMatch(items.poopSockCol2, miscART.poopSock2)
+        positionMatch(items.poopSockCol1, miscART.poopSock1)
     end
 
 end

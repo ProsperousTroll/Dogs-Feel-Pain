@@ -20,7 +20,8 @@ local mouseJoint = nil
 -- Money system
 cash = {}
 cash.Wallet = 0
-cash.Multiplier = 0.03
+cash.Base = 0.02
+cash.Multiplier = 1
 
 -- States
 local debugMode = false
@@ -143,15 +144,7 @@ function love.keypressed(key, isrepeat)
     end
     
     
-    -- TEMP DEBUG... "Q" to delete current object
-    -- 
-    if key == "e" and gameState.Main then 
-        loadPoopSock()
-    end
-
-    if key == "q" and gameState.Main and not grabbedCollider then
-        objects.destroy()
-    end
+    -- TEMP DEBUG KEYS, WILL BE REMOVED
     
     if key == "1" then
         setSkin("base")
@@ -172,6 +165,10 @@ function love.keypressed(key, isrepeat)
     if key == "5" then
         setSkin("daisy")
     end
+    
+    if key == "space" then
+        cash.Wallet = cash.Wallet + 1
+    end
 
 
 end
@@ -188,6 +185,8 @@ function love.mousepressed(x, y, button)
             grabbedCollider = colliders[1]
             local body = grabbedCollider.body
             mouseJoint = love.physics.newMouseJoint(body, x, y)
+            -- this looks retarded but it makes moving things around feel good
+            mouseJoint:setMaxForce(9999999999999999999999999)
         end
        
 
@@ -262,28 +261,12 @@ function love.draw()
         love.graphics.draw(logo, winWidth/2-logo:getWidth()/2, winHeight/2-logo:getHeight()/2)
     end
     
-    -- Draw shop
-
-    if gameState.Shop then
-        love.graphics.print("Shop", winWidth/2-85, winHeight/2-200, 0, 5)
-    end
 
     -- Draw UI elements (Slab)
     ui.draw()
     
     -- TEMP print cash value 
     if gameState.Main or gameState.Shop then
-        love.graphics.print("Wallet: $" .. cash.Wallet, 25, 25)
+        love.graphics.print("Wallet: $" .. cash.Wallet, 50, 50)
     end
-    
-    --[[
-   if items.axeBat or items.beerBottle then 
-        love.graphics.print(speed, 25, 50)
-   end
-   --]]
-
-
-    -- background 
-    local r, g, b = love.math.colorFromBytes(22, 28, 75)
-    love.graphics.setBackgroundColor(r,g,b)
 end
