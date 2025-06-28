@@ -21,9 +21,10 @@ local objects = {}
 
 -- Items
 items = {
+    ikeaBag = false,
+    poopSock = false,
     beerBottle = false,
     axeBat = false,
-    ikeaBag = false,
 }
 
 function objects.load()
@@ -33,9 +34,12 @@ function objects.load()
     miscART.bat = love.graphics.newImage("assets/bat.png")
     miscART.bottle = love.graphics.newImage("assets/beer bottle.png")
     miscART.ikeaBag = love.graphics.newImage("assets/ikeabag.png")
+    miscART.poopSock1 = love.graphics.newImage("assets/poopSock1.png")
+    miscART.poopSock2 = love.graphics.newImage("assets/poopSock2.png")
     
 
 end
+
 
 function loadIkeaBag()
 
@@ -55,6 +59,20 @@ function loadIkeaBag()
     items.ikeaBagJoint1 = world:addJoint('WeldJoint', items.ikeaBagCol1, items.ikeaBagCol2, winWidth/2-(10-260/2), 250, false)
     items.ikeaBagJoint2 = world:addJoint('WeldJoint', items.ikeaBagCol1, items.ikeaBagCol3, winWidth/2-(240/2), 250, false)
     items.ikeaBagJoint3 = world:addJoint('WeldJoint', items.ikeaBagCol1, items.ikeaBagHandle, winWidth/2-100/2, 100, false)
+
+end
+
+function loadPoopSock()
+    
+    items.poopSock = true
+    
+    items.poopSockCol2 = world:newRectangleCollider(winWidth/2+80, 100, 100, 50)
+    items.poopSockCol1 = world:newRectangleCollider(winWidth/2, 100, 100, 50)
+    
+    items.poopSockCol1:setCollisionClass('Object')
+    items.poopSockCol2:setCollisionClass('Object')
+    
+    items.PoopSockJoint = world:addJoint('RevoluteJoint', items.poopSockCol1, items.poopSockCol2, winWidth/2+100, 125, false)
 
 end
 
@@ -142,6 +160,18 @@ function objects.draw()
         objPOS.bagAngle = items.ikeaBagCol1:getAngle()
         
         love.graphics.draw(miscART.ikeaBag, objPOS.bagX, objPOS.bagY, objPOS.bagAngle, 1, 1, miscART.ikeaBag:getWidth()/2, miscART.ikeaBag:getHeight())
+    end
+    
+    if items.poopSock then 
+        
+        objPOS.poop2X, objPOS.poop2Y = items.poopSockCol2:getPosition()
+        objPOS.poop2Angle = items.poopSockCol2:getAngle()
+
+        objPOS.poop1X, objPOS.poop1Y = items.poopSockCol1:getPosition()
+        objPOS.poop1Angle = items.poopSockCol1:getAngle()
+        
+        love.graphics.draw(miscART.poopSock2, objPOS.poop2X, objPOS.poop2Y, objPOS.poop2Angle, 1, 1, miscART.poopSock2:getWidth()/2, miscART.poopSock2:getHeight()/2)
+        love.graphics.draw(miscART.poopSock1, objPOS.poop1X, objPOS.poop1Y, objPOS.poop1Angle, 1, 1, miscART.poopSock1:getWidth()/2, miscART.poopSock1:getHeight()/2)
     end
 
 end

@@ -1,13 +1,5 @@
     -- Skins 
-    bennySkin = {}
 
-    bennySkin.head = love.graphics.newImage("assets/Skins/Benny/ugly_dog_headben.png")
-    bennySkin.chest = love.graphics.newImage("assets/Skins/Benny/ugly_dog_chestben.png")
-    bennySkin.butt = love.graphics.newImage("assets/Skins/Benny/ugly_dog_buttben.png")
-    bennySkin.tail = love.graphics.newImage("assets/Skins/Benny/ugly_dog_tailben.png")
-    bennySkin.frleg = love.graphics.newImage("assets/Skins/Benny/ugly_dog_flegben.png")
-    bennySkin.bkleg = love.graphics.newImage("assets/Skins/Benny/ugly_dog_bklegben.png")
-        
     baseSkin = {}
 
     baseSkin.head = love.graphics.newImage("assets/Skins/Base/ugly dog head.png")
@@ -16,7 +8,16 @@
     baseSkin.tail =  love.graphics.newImage("assets/Skins/Base/ugly dog tail.png")
     baseSkin.frleg =  love.graphics.newImage("assets/Skins/Base/ugly dog fleg.png")
     baseSkin.bkleg =  love.graphics.newImage("assets/Skins/Base/ugly dog bkleg.png")
-    
+
+     bennySkin = {}
+
+    bennySkin.head = love.graphics.newImage("assets/Skins/Benny/ugly_dog_headben.png")
+    bennySkin.chest = love.graphics.newImage("assets/Skins/Benny/ugly_dog_chestben.png")
+    bennySkin.butt = love.graphics.newImage("assets/Skins/Benny/ugly_dog_buttben.png")
+    bennySkin.tail = love.graphics.newImage("assets/Skins/Benny/ugly_dog_tailben.png")
+    bennySkin.frleg = love.graphics.newImage("assets/Skins/Benny/ugly_dog_flegben.png")
+    bennySkin.bkleg = love.graphics.newImage("assets/Skins/Benny/ugly_dog_bklegben.png")   
+
     photoSkin = {}
 
     photoSkin.head = love.graphics.newImage("assets/Skins/Photo/ugly_dog_headreal.png")
@@ -34,3 +35,12 @@
     redSkin.tail = love.graphics.newImage("assets/Skins/Red/redtail.png")
     redSkin.frleg = love.graphics.newImage("assets/Skins/Red/redfleg.png")
     redSkin.bkleg = love.graphics.newImage("assets/Skins/Red/redbkleg.png")
+    
+    daisy = {}
+    
+    daisy.head = love.graphics.newImage("assets/Skins/Daisy/daisyHead.png")
+    daisy.chest = love.graphics.newImage("assets/Skins/Daisy/daisyChest.png")
+    daisy.butt = love.graphics.newImage("assets/Skins/Daisy/daisyButt.png")
+    daisy.tail = love.graphics.newImage("assets/Skins/Daisy/daisyTail.png")
+    daisy.frleg = love.graphics.newImage("assets/Skins/Daisy/daisyFleg.png")
+    daisy.bkleg = love.graphics.newImage("assets/Skins/Daisy/daisyBkleg.png")

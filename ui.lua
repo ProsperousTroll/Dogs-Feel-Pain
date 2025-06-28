@@ -7,18 +7,29 @@ local ui = {}
 local uiWidth = {}
 local uiHeight = {}
 
-uiWidth.Shop = 150
+uiWidth.Shop = 175
 uiHeight.Shop = 200
 
 uiWidth.Menu = 100
 uiHeight.Menu = 50
 
+uiWidth.sButton = 250
+uiHeight.sButton = 75
+
 local itemPurchased = {
     axeBat = false,
     beerBottle = false,
-    beerBottlePrice = "Beer Bottle - $0.25",
+    poopSock = false,
+    poopSockPrice = "Poop Sock - $2.50",
+    beerBottlePrice = "Beer Bottle - $0.50",
     axeBatPrice = "Axe Bat - $10"
 }
+
+local uiAssets = {
+    Shop = love.graphics.newImage("assets/Ui/shop.png"),
+    ShopHovered = love.graphics.newImage("assets/Ui/shopHovered.png"),
+}
+
 
 function ui.load(args)
     Slab.Initialize(args)
@@ -56,6 +67,38 @@ function ui.update(dt)
         Slab.EndWindow()
     end
     
+    if gameState.Main then
+        Slab.BeginWindow('initShop', {
+            ResetPosition = true,
+            ResetSize = true,
+            W = uiWidth.sButton,
+            H = uiHeight.sButton,
+            X = winWidth-50-uiWidth.sButton,
+            Y = 25,
+            BgColor = {0.0, 0.0, 0.0, 0.0},
+            NoOutline = true, 
+            AllowMove = false,
+            AllowResize = false,
+            AutoSizeWindow = false,
+            AutoSizeContent = false,
+            NoSavedSettings = true,
+            ShowMinimize = false,
+            ShowScrollbarX = false, 
+            ShowScrollbarY = false,
+        })
+        
+        Slab.Image('ShopButton', {Image = uiAssets.Shop, ReturnOnClick = true})
+        if Slab.IsControlClicked() then
+            initShop()
+        end
+        
+        if Slab.IsControlHovered() then
+            Image = uiAssets.ShopHovered
+        end
+
+        Slab.EndWindow()
+    end
+    
     if gameState.Shop then
        Slab.BeginWindow('Shop', { 
             ResetPosition = true,
@@ -76,9 +119,10 @@ function ui.update(dt)
             loadIkeaBag()
        end
 
+
        if Slab.Button(itemPurchased.beerBottlePrice) and not items.beerBottle then
-            if not itemPurchased.beerBottle and cash.Wallet >= 0.25 then
-                cash.Wallet = cash.Wallet - 0.5
+            if not itemPurchased.beerBottle and cash.Wallet >= 0.50 then
+                cash.Wallet = cash.Wallet - 0.50
                 itemPurchased.beerBottlePrice = "Beer Bottle"
                 itemPurchased.beerBottle = true
                 objects:destroy()
@@ -88,10 +132,23 @@ function ui.update(dt)
                 loadBeer()
             end
        end
+       
+       if Slab.Button(itemPurchased.poopSockPrice) and not items.poopSock then
+           if not itemPurchased.poopSock and cash.Wallet >= 2.50 then
+               cash.Wallet = cash.Wallet - 2.50
+               itemPurchased.poopSockPrice = "Poop Sock"
+               itemPurchased.poopSock = true
+               objects:destroy()
+               loadPoopSock()
+           elseif itemPurchased.poopSock then
+               objects:destroy()
+               loadPoopSock()
+           end
+       end
 
         if Slab.Button(itemPurchased.axeBatPrice) and not items.axeBat then
             if not itemPurchased.axeBat and cash.Wallet >= 10 then
-                cash.Wallet = cash.Wallet - 10
+                cash.Wallet = cash.Wallet - 10.00
                 itemPurchased.axeBatPrice = "Axe Bat"
                 itemPurchased.axeBat = true
                 objects:destroy()

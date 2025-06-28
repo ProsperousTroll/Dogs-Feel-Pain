@@ -144,6 +144,11 @@ function love.keypressed(key, isrepeat)
     
     
     -- TEMP DEBUG... "Q" to delete current object
+    -- 
+    if key == "e" and gameState.Main then 
+        loadPoopSock()
+    end
+
     if key == "q" and gameState.Main and not grabbedCollider then
         objects.destroy()
     end
@@ -162,6 +167,10 @@ function love.keypressed(key, isrepeat)
     
     if key == "4" then
         setSkin("red")
+    end
+    
+    if key == "5" then
+        setSkin("daisy")
     end
 
 
