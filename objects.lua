@@ -1,6 +1,6 @@
 -- Potential list of items player can buy:
 --
--- A mean note [ - ]
+-- Microwave [ - ]
 -- Ikea bag [ X ]
 -- Poop Sock [ X ]
 -- Chocolate [ - ]
