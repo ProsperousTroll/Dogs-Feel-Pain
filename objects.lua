@@ -101,7 +101,7 @@ function objects.speed(Table)
     for k, v in pairs(Table) do
         if type(v) == "table" and v.body and not v.body:isDestroyed() then
             local vx, vy = v:getLinearVelocity()
-            speed = (vx+vy)/2
+            speed = math.sqrt(vx * vx + vy * vy)
             if speed < 0 then
                 speed = speed * -1
             end

@@ -1,4 +1,5 @@
 local sk = require 'skins'
+local sound = require 'sound'
 local dog = {}
 local xOffset = 180
 local yOffset = 600
@@ -104,11 +105,14 @@ function dog.destroy()
 
 end
 
+
 function dog.hurt()
     for k, v in pairs(DOG) do
         if type(v) == "table" and v.enter then
-            if v:enter('Object') and speed > 950 then
+            if v:enter('Object') and speed > 3500 then
                 cash.Wallet = cash.Wallet + (cash.Base * cash.Multiplier)
+                sound.doghurt()
+                impactFrame = true
             end
         end
     end
@@ -121,7 +125,6 @@ function dog.update(dt)
    -- collision
     dog.hurt()
 
-    
     
 end
 

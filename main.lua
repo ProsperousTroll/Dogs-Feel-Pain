@@ -8,6 +8,7 @@ local Slab = require 'libraries/Slab'
 local dog = require 'dog'
 local objects = require 'objects'
 local ui = require 'ui'
+local sound = require 'sound'
 
 -- Placeholder vars for logo and bg images
 local logo
@@ -23,6 +24,7 @@ cash.Wallet = 0
 cash.Base = 0.02
 cash.Multiplier = 1
 
+
 -- States
 local debugMode = false
 gameState = {
@@ -30,6 +32,7 @@ gameState = {
     Menu = true,    
     Shop = false,
 }
+
 
 ---------------------
 ----- LOVE.LOAD -----
@@ -39,6 +42,7 @@ function love.load()
 
     -- Load slab
     ui.load()
+    sound.load()
     
     -- Get window width + height
     winWidth, winHeight = love.graphics.getDimensions() 
@@ -71,6 +75,11 @@ function love.load()
     -- Images
     logo = love.graphics.newImage("assets/templogo.png")
     bg = love.graphics.newImage("assets/BG.png")
+    
+
+    
+    impactFrame = false
+    impactTimer = 0
 
 end
 
@@ -104,7 +113,6 @@ function initMenu()
         setGameState("Menu")
     end
 end
-
     
 function initShop()
     if not gameState.Shop then
@@ -220,17 +228,31 @@ function love.update(dt)
     -- Update slab (ui library)
     ui.update(dt)
 
+    if impactFrame then
+        impactTimer = impactTimer + 1
+        if impactTimer >= 5 then
+            impactFrame = false
+            impactTimer = 0
+        end
+    end
+
     -- Update physics world (windfield) 
-    if gameState.Main then
+    if gameState.Main and not impactFrame then
         world:update(dt)
         dog:update(dt)
     end
+
     
     -- Calculate object speed
     if gameState.Main then
+        objects.speed(DOG)
         objects.speed(items)
     end
-
+    
+    if gameState.Main and mouseJoint then
+        sound.play()
+    end
+    
 end
 
 ---------------------
@@ -252,7 +274,7 @@ function love.draw()
     end
 
     -- Enable debug mode 
-    if debugMode then
+    if debugMode or impactFrame then
        world:draw()
     end
     
@@ -261,6 +283,7 @@ function love.draw()
         love.graphics.draw(logo, winWidth/2-logo:getWidth()/2, winHeight/2-logo:getHeight()/2)
     end
     
+    
 
     -- Draw UI elements (Slab)
     ui.draw()
@@ -268,5 +291,9 @@ function love.draw()
     -- TEMP print cash value 
     if gameState.Main or gameState.Shop then
         love.graphics.print("Wallet: $" .. cash.Wallet, 50, 50)
+    end
+    
+    if gameState.Main and mouseJoint then
+        love.graphics.print(speed, 50, 100)
     end
 end
