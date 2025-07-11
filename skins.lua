@@ -45,3 +45,13 @@
     daisy.tail = love.graphics.newImage("assets/Skins/Daisy/daisyTail.png")
     daisy.frleg = love.graphics.newImage("assets/Skins/Daisy/daisyFleg.png")
     daisy.bkleg = love.graphics.newImage("assets/Skins/Daisy/daisyBkleg.png")
+    
+
+    annoying = {}
+    
+    annoying.head = love.graphics.newImage("assets/Skins/Annoying/annoying_dog_head.png")
+    annoying.chest = love.graphics.newImage("assets/Skins/Annoying/annoying_dog_chest.png")
+    annoying.butt = love.graphics.newImage("assets/Skins/Annoying/annoying_dog_butt.png")
+    annoying.tail = love.graphics.newImage("assets/Skins/Annoying/annoying_dog_tail.png")
+    annoying.frleg = love.graphics.newImage("assets/Skins/Annoying/annoying_dog_fleg.png")
+    annoying.bkleg =love.graphics.newImage("assets/Skins/Annoying/annoying_dog_bkleg.png")

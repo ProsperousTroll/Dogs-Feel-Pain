@@ -89,6 +89,10 @@ function setSkin(skin)
         if skin == "daisy" then
             dogART[k] = daisy[k]
         end
+        
+        if skin == "annoying" then
+            dogART[k] = annoying[k]
+        end
     end
 end
 

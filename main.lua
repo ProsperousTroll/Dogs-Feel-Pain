@@ -194,6 +194,10 @@ function love.keypressed(key, isrepeat)
         setSkin("daisy")
     end
     
+    if key == "6" then
+        setSkin("annoying")
+    end
+    
     if key == "space" then
         cash.Wallet = cash.Wallet + 1
     end
@@ -279,7 +283,6 @@ function love.update(dt)
             cash.Multiplier = 1
             combo.multiTimer = 120
         end
-        
     end
 
     
