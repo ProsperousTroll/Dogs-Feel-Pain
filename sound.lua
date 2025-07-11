@@ -19,13 +19,18 @@ function sound.load()
         love.audio.newSource("assets/AUDIO/SFX/doghurt2.wav", 'static'),
     }
     
+    SFX.bgmusic = {
+        love.audio.newSource("assets/AUDIO/Music/fishstain_dogsong.ogg", 'stream')
+    }
+    
 
 end
 
-function sound.play()
-    local rndsnd = math.random(1, #SFX.swoosh)
+-- Input table with assortment of sounds to play one at random
+function sound.playRandom(sn)
+    local rndsnd = math.random(1, #sn)
     if not hasPlayed and speed > 3500 then
-       SFX.swoosh[rndsnd]:play()
+       sn[rndsnd]:play()
        hasPlayed = true
     elseif speed <= 3500 then
         hasPlayed = false

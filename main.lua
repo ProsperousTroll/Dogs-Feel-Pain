@@ -24,6 +24,13 @@ cash.Wallet = 0
 cash.Base = 0.02
 cash.Multiplier = 1
 
+-- Combo system
+combo = {
+    count = 0,
+    maxMultiplier = 10,
+    multiTimer = 1,
+}
+
 
 -- States
 local debugMode = false
@@ -53,6 +60,7 @@ function love.load()
     
     -- establish collision classes
     world:addCollisionClass('Interactive')
+    world:addCollisionClass('World')
     world:addCollisionClass('Object')
     world:addCollisionClass('Dog')
     world:addCollisionClass('Handle', {ignores = {'Dog'}})
@@ -66,21 +74,31 @@ function love.load()
     ceiling = world:newRectangleCollider(0, -50, winWidth, 50)
     wall_left = world:newRectangleCollider(0, 0, 50, winHeight)
     wall_right = world:newRectangleCollider(winWidth-50, 0, 50, winHeight)
+
     ground:setType('static')
     ceiling:setType('static')
     wall_left:setType('static')
     wall_right:setType('static')
     
+    ground:setCollisionClass('World')
+    ceiling:setCollisionClass('World')
+    wall_left:setCollisionClass('World')
+    wall_right:setCollisionClass('World')
+    
     
     -- Images
     logo = love.graphics.newImage("assets/templogo.png")
+    vign = love.graphics.newImage("assets/vign.png")
     bg = love.graphics.newImage("assets/BG.png")
     
 
     
     impactFrame = false
     impactTimer = 0
-
+    
+    SFX.bgmusic[1]:play()
+    
+    speed = 0 
 end
 
 
@@ -101,6 +119,7 @@ function initMain()
         if dogVisible == false then
             dog.load()
         end
+        SFX.bgmusic[1]:stop()
     end
 end
 
@@ -111,6 +130,7 @@ function initMenu()
         end
         objects.destroy()
         setGameState("Menu")
+        SFX.bgmusic[1]:play()
     end
 end
     
@@ -177,6 +197,15 @@ function love.keypressed(key, isrepeat)
     if key == "space" then
         cash.Wallet = cash.Wallet + 1
     end
+    
+    
+    if key == 'f' then 
+        DOG.joint1:destroy()
+    end
+    
+    if key == 'g' then
+        DOG.joint2:destroy()
+    end
 
 
 end
@@ -187,19 +216,16 @@ function love.mousepressed(x, y, button)
 -- Create mouse joint if mouse button 1 is clicked over interactive object
     if button == 1 and not grabbedCollider and gameState.Main then
         -- find interactable collider under mouse
-        local colliders = world:queryCircleArea(x, y, 20, {'Interactive', 'Object', 'Dog', 'Handle'})
+        colliders = world:queryCircleArea(x, y, 20, {'Object', 'Dog', 'Handle'})
 
         if #colliders > 0 then
             grabbedCollider = colliders[1]
             local body = grabbedCollider.body
             mouseJoint = love.physics.newMouseJoint(body, x, y)
             -- this looks retarded but it makes moving things around feel good
-            mouseJoint:setMaxForce(9999999999999999999999999)
+            mouseJoint:setMaxForce(999999999999999999999999)
         end
-       
-
     end
-
 end
 
 function love.mousemoved(x, y, dx, dy)
@@ -215,8 +241,8 @@ function love.mousereleased(x, y, button)
         mouseJoint:destroy()
         mouseJoint = nil
         grabbedCollider = nil
+        speed = 0
     end
-    
 end
 
 -------------------
@@ -224,13 +250,15 @@ end
 -------------------
 
 function love.update(dt)
+
+    local fps = love.timer.getFPS()
     
     -- Update slab (ui library)
     ui.update(dt)
 
     if impactFrame then
         impactTimer = impactTimer + 1
-        if impactTimer >= 5 then
+        if impactTimer >= 6 then
             impactFrame = false
             impactTimer = 0
         end
@@ -241,16 +269,27 @@ function love.update(dt)
         world:update(dt)
         dog:update(dt)
     end
+    
+    -- Combo (crude spaghetti)
+    if combo.count > 0 then
+        cash.Multiplier = combo.count * 1.5
+        combo.multiTimer = combo.multiTimer - 1
+        if combo.multiTimer == 0 then
+            combo.count = 0
+            cash.Multiplier = 1
+            combo.multiTimer = 120
+        end
+        
+    end
 
     
     -- Calculate object speed
-    if gameState.Main then
-        objects.speed(DOG)
-        objects.speed(items)
+    if gameState.Main and mouseJoint then
+        objects.speed(colliders)
     end
     
     if gameState.Main and mouseJoint then
-        sound.play()
+        sound.playRandom(SFX.swoosh)
     end
     
 end
@@ -263,6 +302,11 @@ function love.draw()
     -- Draw background
     love.graphics.draw(bg, winWidth/2-bg:getWidth()/2, winHeight/2-bg:getHeight()/2)
 
+    if impactFrame then
+    --    love.graphics.rectangle("fill", winHeight/2-2000/2, winWidth/2-2000/2, 2000, 2000)
+        love.graphics.draw(vign, winWidth/2-vign:getWidth()/2, winHeight/2-vign:getHeight()/2)
+    end
+
     -- Draw dog sprites over colliders 
     if gameState.Main or gameState.Shop then
         dog.draw()
@@ -274,7 +318,7 @@ function love.draw()
     end
 
     -- Enable debug mode 
-    if debugMode or impactFrame then
+    if debugMode then
        world:draw()
     end
     
@@ -282,8 +326,6 @@ function love.draw()
     if gameState.Menu then
         love.graphics.draw(logo, winWidth/2-logo:getWidth()/2, winHeight/2-logo:getHeight()/2)
     end
-    
-    
 
     -- Draw UI elements (Slab)
     ui.draw()
@@ -291,9 +333,6 @@ function love.draw()
     -- TEMP print cash value 
     if gameState.Main or gameState.Shop then
         love.graphics.print("Wallet: $" .. cash.Wallet, 50, 50)
-    end
-    
-    if gameState.Main and mouseJoint then
-        love.graphics.print(speed, 50, 100)
+        love.graphics.print("Combo: " .. combo.count, 50, 100)
     end
 end

@@ -1,4 +1,5 @@
     -- Skins 
+    -- Hiding this horrible code away in it's own file for uhhh. modding purposes. Yeah, I'm like PirateSoftware. People are going to mod my game! My cool awesome indie game! Fuck you. 
 
     baseSkin = {}
 
@@ -9,7 +10,7 @@
     baseSkin.frleg =  love.graphics.newImage("assets/Skins/Base/ugly dog fleg.png")
     baseSkin.bkleg =  love.graphics.newImage("assets/Skins/Base/ugly dog bkleg.png")
 
-     bennySkin = {}
+    bennySkin = {}
 
     bennySkin.head = love.graphics.newImage("assets/Skins/Benny/ugly_dog_headben.png")
     bennySkin.chest = love.graphics.newImage("assets/Skins/Benny/ugly_dog_chestben.png")
