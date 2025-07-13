@@ -1,6 +1,5 @@
 -- Potential list of items player can buy:
 --
--- Microwave [ - ]
 -- Ikea bag [ X ]
 -- Poop Sock [ X ]
 -- Chocolate [ - ]
@@ -10,6 +9,7 @@
 -- Meat hook [ - ]
 -- Bat [ X ]
 -- Red Hot Nickel Ball [ - ]
+-- Microwave [ - ]
 -- Hot Car [ - ]
 -- Nana + pop pop's house [ - ]
 -- Injection [ - ]

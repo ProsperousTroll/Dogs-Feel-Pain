@@ -19,16 +19,25 @@ local grabbedCollider = nil
 local mouseJoint = nil
 
 -- Money system
-cash = {}
-cash.Wallet = 0
-cash.Base = 0.02
-cash.Multiplier = 1
+cash = {
+    Wallet = 0,
+    Base = 0.02,
+    Multiplier = 1,
+} 
 
 -- Combo system
 combo = {
     count = 0,
-    maxMultiplier = 10,
+    maxMultiplier = 25,
     multiTimer = 1,
+}
+
+-- Concern
+concern = { 
+    level = 0,
+    fillRate = 5,
+    decayRate = 2,
+    fullMeter = 100,
 }
 
 
@@ -38,6 +47,7 @@ gameState = {
     Main = false,
     Menu = true,    
     Shop = false,
+    gameOver = false,
 }
 
 
@@ -89,6 +99,7 @@ function love.load()
     -- Images
     logo = love.graphics.newImage("assets/templogo.png")
     vign = love.graphics.newImage("assets/vign.png")
+    gameOver = love.graphics.newImage("assets/gameover.png")
     bg = love.graphics.newImage("assets/BG.png")
     
 
@@ -128,7 +139,13 @@ function initMenu()
         if dogVisible then
            dog.destroy()
         end
+        if mouseJoint then
+            mouseJoint:destroy()
+            mouseJoint = nil
+            grabbedCollider = nil
+        end
         objects.destroy()
+        concern.level = 0
         setGameState("Menu")
         SFX.bgmusic[1]:play()
     end
@@ -142,6 +159,23 @@ function initShop()
             mouseJoint = nil
             grabbedCollider = nil
         end
+    end
+end
+
+function initGameOver()
+    if not gameState.gameOver then
+        if dogVisible then
+            dog.destroy()
+        end
+        if mouseJoint then
+            mouseJoint:destroy()
+            mouseJoint = nil
+            grabbedCollider = nil
+        end
+        objects.destroy()
+        setGameState("gameOver")
+        combo.count = 0
+        concern.level = 0
     end
 end
 
@@ -199,7 +233,7 @@ function love.keypressed(key, isrepeat)
     end
     
     if key == "space" then
-        cash.Wallet = cash.Wallet + 1
+        cash.Wallet = cash.Wallet + 15
     end
     
     
@@ -255,7 +289,7 @@ end
 
 function love.update(dt)
 
-    local fps = love.timer.getFPS()
+    fps = love.timer.getFPS()
     
     -- Update slab (ui library)
     ui.update(dt)
@@ -265,6 +299,10 @@ function love.update(dt)
         if impactTimer >= 6 then
             impactFrame = false
             impactTimer = 0
+            if combo.count < combo.maxMultiplier then
+                combo.count = combo.count + 1
+            end
+            combo.multiTimer = fps * 1
         end
     end
 
@@ -275,14 +313,22 @@ function love.update(dt)
     end
     
     -- Combo (crude spaghetti)
-    if combo.count > 0 then
-        cash.Multiplier = combo.count * 1.5
+    if gameState.Main and combo.count > 0 then
+        cash.Multiplier = combo.count 
         combo.multiTimer = combo.multiTimer - 1
         if combo.multiTimer == 0 then
             combo.count = 0
             cash.Multiplier = 1
-            combo.multiTimer = 120
+            combo.multiTimer = fps * 1
         end
+    end
+    
+    if gameState.Main and concern.level > 0 then
+        concern.level = concern.level - (concern.decayRate * dt)
+    end
+    
+    if concern.level > concern.fullMeter then
+        initGameOver()
     end
 
     
@@ -333,9 +379,14 @@ function love.draw()
     -- Draw UI elements (Slab)
     ui.draw()
     
+    if gameState.gameOver then 
+        love.graphics.draw(gameOver, winWidth/2-gameOver:getWidth()/2, winHeight/2-gameOver:getHeight()/2)
+    end
+    
     -- TEMP print cash value 
     if gameState.Main or gameState.Shop then
         love.graphics.print("Wallet: $" .. cash.Wallet, 50, 50)
         love.graphics.print("Combo: " .. combo.count, 50, 100)
+        love.graphics.print("Concern: " .. concern.level, 50, 150)
     end
 end

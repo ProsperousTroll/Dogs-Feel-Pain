@@ -38,12 +38,20 @@ function ui.load(args)
 
 end
 
+function resetShop()
+    for k, v in pairs(itemPurchased) do
+        if v == type('boolean') then
+            v = false
+        end
+    end
+end
+
 
 
 function ui.update(dt)
     Slab.Update(dt)
     
-    if gameState.Menu then
+    if gameState.Menu or gameState.gameOver then
         Slab.BeginWindow('Main Menu', {
             ResetPosition = true,
             ResetSize = true,
@@ -58,7 +66,9 @@ function ui.update(dt)
         })
         
         if Slab.Button("Begin.") then
-            initMain() end
+            initMain()
+            resetShop()
+        end
         
         if Slab.Button("I can't...") then
            love.window.close() 

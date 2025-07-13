@@ -3,6 +3,7 @@ local sound = require 'sound'
 local dog = {}
 local xOffset = 180
 local yOffset = 600
+local isHurt = false
 skin = "base"
 
 dogVisible = false
@@ -96,7 +97,6 @@ function setSkin(skin)
     end
 end
 
-
 function dog.destroy()
 
     dogVisible = false
@@ -113,24 +113,27 @@ end
 function dog.hurt()
     for k, v in pairs(DOG) do
         if type(v) == "table" and v.enter then
-            if v:enter('Object') and speed > 4500 then
+            if v:enter('Object') and speed >= 4500 and not isHurt then
+                isHurt = true
                 cash.Wallet = cash.Wallet + (cash.Base * cash.Multiplier)
+                concern.level = concern.level + concern.fillRate
                 sound.doghurt()
-                if speed > 6000 then
-                    impactFrame = true
-                    combo.count = combo.count + 1
-                end
-            end
-            -- bugged section, trying to fix 
-            --[[
-            if v:enter('World') and speed > 6500 then
-                cash.Wallet = cash.Wallet + 0.01
-                sound.doghurt()
-                if speed > 7500 then
+                if speed >= 6000 then
                     impactFrame = true
                 end
+            elseif speed <= 4500 then
+                isHurt = false
             end
-            --]]
+        -- bugged section, trying to fix 
+        --[[
+        if v:enter('World') and speed > 6500 then
+            cash.Wallet = cash.Wallet + 0.01
+            sound.doghurt()
+            if speed > 7500 then
+                impactFrame = true
+            end
+        end
+        --]]
         end
     end
 end
