@@ -9,6 +9,7 @@ local dog = require 'dog'
 local objects = require 'objects'
 local ui = require 'ui'
 local sound = require 'sound'
+local ux = require 'ux'
 
 -- Placeholder vars for logo and bg images
 local logo
@@ -35,9 +36,9 @@ combo = {
 -- Concern
 concern = { 
     level = 0,
-    fillRate = 5,
-    decayRate = 2,
-    fullMeter = 100,
+    fillRate = 30,
+    decayRate = 25,
+    fullMeter = BAR.H,
 }
 
 
@@ -51,11 +52,15 @@ gameState = {
 }
 
 
+
 ---------------------
 ----- LOVE.LOAD -----
 ---------------------
 
 function love.load()
+
+    -- custom UX
+    ux.load()
 
     -- Load slab
     ui.load()
@@ -289,6 +294,8 @@ end
 
 function love.update(dt)
 
+    ux.update(dt)
+
     fps = love.timer.getFPS()
     
     -- Update slab (ui library)
@@ -296,7 +303,7 @@ function love.update(dt)
 
     if impactFrame then
         impactTimer = impactTimer + 1
-        if impactTimer >= 6 then
+        if impactTimer >= 0.07 * fps then
             impactFrame = false
             impactTimer = 0
             if combo.count < combo.maxMultiplier then
@@ -314,18 +321,19 @@ function love.update(dt)
     
     -- Combo (crude spaghetti)
     if gameState.Main and combo.count > 0 then
-        cash.Multiplier = combo.count 
+        cash.Multiplier = combo.count + concern.level 
         combo.multiTimer = combo.multiTimer - 1
         if combo.multiTimer == 0 then
             combo.count = 0
             cash.Multiplier = 1
-            combo.multiTimer = fps * 1
+            combo.multiTimer = 1 * dt
         end
     end
     
-    if gameState.Main and concern.level > 0 then
+    if gameState.Main and concern.level >= 0 then
         concern.level = concern.level - (concern.decayRate * dt)
     end
+    
     
     if concern.level > concern.fullMeter then
         initGameOver()
@@ -348,6 +356,8 @@ end
 ---------------------
 
 function love.draw()
+    
+
     -- Draw background
     love.graphics.draw(bg, winWidth/2-bg:getWidth()/2, winHeight/2-bg:getHeight()/2)
 
@@ -387,6 +397,10 @@ function love.draw()
     if gameState.Main or gameState.Shop then
         love.graphics.print("Wallet: $" .. cash.Wallet, 50, 50)
         love.graphics.print("Combo: " .. combo.count, 50, 100)
-        love.graphics.print("Concern: " .. concern.level, 50, 150)
+      --love.graphics.print("Concern: " .. concern.level, 50, 150)
+    end
+    
+    if gameState.Main or gameState.shop then
+        ux.draw()
     end
 end

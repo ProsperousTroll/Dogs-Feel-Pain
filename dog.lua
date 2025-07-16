@@ -121,7 +121,7 @@ function dog.hurt()
                 if speed >= 6000 then
                     impactFrame = true
                 end
-            elseif speed <= 4500 then
+            elseif speed <= 1000 then
                 isHurt = false
             end
         -- bugged section, trying to fix 
