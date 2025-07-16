@@ -98,11 +98,11 @@ end
 
 -- Detect how fast the active object is moving, in order to register dog.hurt()
 -- Not entirely sure why this function is here now, since it now calculates the speed of whatever collider is linked with the mouseJoint. Oh well. 
-function objects.speed(Table)
+function objects.speed(Table, dt)
     for k, v in pairs(Table) do
         if type(v) == "table" and v.body and not v.body:isDestroyed() then
             local vx, vy = v:getLinearVelocity()
-            speed = math.sqrt(vx * vx + vy * vy)
+            speed = (math.sqrt(vx * vx + vy * vy) * dt)
             if speed < 0 then
                 speed = speed * -1
             end

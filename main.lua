@@ -342,7 +342,7 @@ function love.update(dt)
     
     -- Calculate object speed
     if gameState.Main and mouseJoint then
-        objects.speed(colliders)
+        objects.speed(colliders, dt)
     end
     
     if gameState.Main and mouseJoint then
@@ -398,6 +398,10 @@ function love.draw()
         love.graphics.print("Wallet: $" .. cash.Wallet, 50, 50)
         love.graphics.print("Combo: " .. combo.count, 50, 100)
       --love.graphics.print("Concern: " .. concern.level, 50, 150)
+    end
+    
+    if gameState.Main and mouseJoint then
+        love.graphics.print("Speed: " .. speed, 50, 150)
     end
     
     if gameState.Main or gameState.shop then
